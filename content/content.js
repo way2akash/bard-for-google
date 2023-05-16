@@ -1,25 +1,23 @@
 
 
 let query = ""
-let gpt_access_token_validity   //chatgpt access token
+let gpt_access_token_validity   
 let panelHeight
 let gptDone = 0
 let bardDone = 0
 let targetLocation = window.location.hostname
 
-let icon = chrome.runtime.getURL("icon64.png")
-let gptLogo = chrome.runtime.getURL("gptLogo.svg")
-let bardLogo = chrome.runtime.getURL("bardLogo.svg")
-let infoIcon = chrome.runtime.getURL("info.png")
-let loaderIcon = chrome.runtime.getURL("loader.png")
-let maximizeIcon = chrome.runtime.getURL("maximizeIcon.png")
-let minimizeIcon = chrome.runtime.getURL("minimizeIcon.png")
-let editingIcon = chrome.runtime.getURL("editingIcon.svg")
-let searchIcon = chrome.runtime.getURL("searchIcon.svg")
-let copyIcon = chrome.runtime.getURL("copyIcon.svg")
-let closeIcon = chrome.runtime.getURL("closeIcon.png")
-
-
+let icon = chrome.runtime.getURL("static/images/icon64.png")
+let gptLogo = chrome.runtime.getURL("static/images/gptLogo.svg")
+let bardLogo = chrome.runtime.getURL("static/images/bardLogo.svg")
+let infoIcon = chrome.runtime.getURL("static/images/info.png")
+let loaderIcon = chrome.runtime.getURL("static/images/loader.png")
+let maximizeIcon = chrome.runtime.getURL("static/images/maximizeIcon.png")
+let minimizeIcon = chrome.runtime.getURL("static/images/minimizeIcon.png")
+let editingIcon = chrome.runtime.getURL("static/images/editingIcon.svg")
+let searchIcon = chrome.runtime.getURL("static/images/searchIcon.svg")
+let copyIcon = chrome.runtime.getURL("static/images/copyIcon.svg")
+let closeIcon = chrome.runtime.getURL("static/images/closeIcon.png")
 
 const bard_key_func = () => {
     const bard_interval = setInterval(() => {
@@ -48,12 +46,9 @@ if (targetLocation.includes("www.google.")) {
     chrome.storage.local.get(["toggleState"], (result) => {
         if(result.toggleState==="on"){
             waitUntilVideoElementLoads()
-
         }
-
     })
 }
-
 
 async function waitUntilVideoElementLoads() {
     return await new Promise((resolve) => {

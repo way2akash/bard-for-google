@@ -1,7 +1,7 @@
 
 
 chrome.runtime.onInstalled.addListener((e) => {
-    const logo = chrome.runtime.getURL("icon64.png");
+    const logo = chrome.runtime.getURL("static/images/icon64.png");
     chrome.storage.local.set({ toggleState: "on" })
 
     chrome.notifications.create(
@@ -41,8 +41,6 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
     }
 
 })
-
-
 
 
 const setToStorage = (key, data) => {

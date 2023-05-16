@@ -1,37 +1,50 @@
 {
   "manifest_version": 3,
-  "version": "1.0.5",
+  "version": "1.0.6",
   "name": "Bard For Google",
   "description": "Install Bard for Google Chrome Extension and get Google Bard AI responses along with Google search results.",
   "background": {
     "service_worker": "background.js"
   },
   "action": {
-    "default_popup": "popup.html",
-    "default_icon": "icon64.png"
+    "default_popup": "popup/popup.html",
+    "default_icon": "static/images/icon64.png"
   },
   "icons": {
-    "16": "icon 16.png",
-    "32": "icon 32.png",
-    "64": "icon64.png",
-    "128": "icon 128.png"
+    "16": "static/images/icon 16.png",
+    "32": "static/images/icon 32.png",
+    "64": "static/images/icon64.png",
+    "128": "static/images/icon 128.png"
   },
   "host_permissions": ["<all_urls>"],
-
   "content_scripts": [
     {
       "matches": [
         "<all_urls>"
       ],
-      "js": ["highlight.min.js", "markdown-it.min.js", "content.js"],
+      "js": ["content/highlight.min.js", "content/markdown-it.min.js", "content/content.js"],
 
-      "css": ["github.css", "content.css"]
+      "css": ["css/github.css", "css/content.css"]
     }
   ],
   "permissions": ["notifications", "storage", "contextMenus"],
   "web_accessible_resources": [
     {
-      "resources": ["icon64.png", "gptLogo.svg", "info.png", "loader.png", "maximizeIcon.png", "minimizeIcon.png", "editingIcon.svg", "searchIcon.svg", "copyIcon.svg", "bardLogo.svg", "bardGptLogo.png", "closeIcon.png", "Roboto-Regular.ttf"],
+      "resources": [
+        "static/images/icon64.png", 
+        "static/images/gptLogo.svg", 
+        "static/images/info.png", 
+        "static/images/loader.png", 
+        "static/images/maximizeIcon.png", 
+        "static/images/minimizeIcon.png", 
+        "static/images/editingIcon.svg", 
+        "static/images/searchIcon.svg", 
+        "static/images/copyIcon.svg", 
+        "static/images/bardLogo.svg", 
+        "static/images/bardGptLogo.png", 
+        "static/images/closeIcon.png", 
+        "static/font/Roboto-Regular.ttf"
+      ],
       "matches": ["<all_urls>"]
     }
   ]

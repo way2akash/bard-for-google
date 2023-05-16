@@ -215,7 +215,7 @@ const copyBtnListener = () => {
 
             // Create copyPanel only if it doesn't exist
             let copyPanel = document.createElement("div")
-            copyPanel.setAttribute("id", "copyPanel")
+            copyPanel.setAttribute("id", "copyPanel")   
             parentNode.insertBefore(copyPanel, e);
 
             let copyDiv = document.createElement("div")
@@ -226,7 +226,7 @@ const copyBtnListener = () => {
             let copyBtn = document.createElement("img")
             copyBtn.setAttribute("id", "copyBtn")
             copyBtn.setAttribute("alt", "bard for google copy icon")
-            copyBtn.src = "copyIcon.svg"
+            copyBtn.src = "../static/images/copyIcon.svg"
             copyDiv.appendChild(copyBtn)
 
             copyDiv.addEventListener("click", () => {

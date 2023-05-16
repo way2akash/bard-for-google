@@ -3,16 +3,16 @@
 
 <head>
     <title>Bard For Google</title>
+    
     <link rel="stylesheet" href="popup.css">
-    <script src="markdown-it.min.js"></script>
-    <script src="highlight.min.js"></script>
-
-
+    <script src="../content/markdown-it.min.js"></script>
+    <script src="../content/highlight.min.js"></script>
+    <script src="../css/github.css"></script>
 </head>
 
 <body>
     <div id="title">
-        <img src="bardGptLogo.png" alt="">
+        <img src="../static/images/bardGptLogo.png" alt="">
     </div>
 
     <div id="disableSection">
@@ -30,7 +30,7 @@
 
             <div id="bardHeader">
                 <div id="bard_header_section">
-                    <img src="bardLogo.svg" alt="">
+                    <img src="../static/images/bardLogo.svg" alt="">
                     <p>Bard AI</p>
 
                 </div>
@@ -39,7 +39,7 @@
             </div>
             <div id="gptHeader">
                 <div id="gpt_header_section">
-                    <img src="gptLogo.svg" alt="">
+                    <img src="../static/images/gptLogo.svg" alt="">
                     <p>ChatGPT</p>
                 </div>
                 <div id="gpt_header_border"></div>
@@ -50,13 +50,13 @@
 
         <div id="bard_section_div">
 
-            <img src="loader.png" alt="" id="bardLoader">
+            <img src="../static/images/loader.png" alt="" id="bardLoader">
             <div id="bard-result">
 
             </div>
             <!-- bard login authentication  -->
             <div id="bard_login">
-                <img src="info.png" alt="">
+                <img src="../static/images/info.png" alt="">
                 <p class="cloudfare">Cloudflare Security check required</p>
                 <p class="loginText">Please login <a href="https://bard.google.com/" target="_blank">bard.google.com</a>
                     once and come back
@@ -68,14 +68,14 @@
         </div>
 
         <div id="gpt_section_div">
-            <img src="loader.png" alt="" id="gptLoader">
+            <img src="../static/images/loader.png" alt="" id="gptLoader">
             <div id="gpt-result">
 
             </div>
 
             <!-- gpt login authentication  -->
             <div id="gpt_login">
-                <img src="info.png" alt="">
+                <img src="../static/images/info.png" alt="">
                 <p class="cloudfare">Cloudflare Security check required</p>
                 <p class="loginText">Please login <a href="https://chat.openai.com/chat"
                         target="_blank">chat.openai.com</a> once and come back
@@ -87,7 +87,7 @@
 
         <div id="searchDiv">
             <input type="text" id="searchInput">
-            <img src="searchIcon.svg" alt="" id="search">
+            <img src="../static/images/searchIcon.svg" alt="" id="search">
 
         </div>
 
