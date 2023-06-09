@@ -1,4 +1,6 @@
 
+let abortController;
+let abortSignal;
 
 chrome.runtime.onInstalled.addListener((e) => {
     const logo = chrome.runtime.getURL("static/images/icon64.png");
@@ -24,7 +26,23 @@ chrome.runtime.onInstalled.addListener((e) => {
         contexts: ["selection"]
     })
 
+    if (e.reason == chrome.runtime.OnInstalledReason.INSTALL) {
+
+        chrome.tabs.create({
+            url: 'https://bard.google.com/'
+        })
+
+        setTimeout(() => {
+            chrome.tabs.create({
+                url: 'https://www.google.com/search?q=cat'
+            })
+        }, 3000);
+
+
+    }
+
 }
+
 )
 
 chrome.contextMenus.onClicked.addListener((info, tab) => {
@@ -107,6 +125,13 @@ const getAllConversations = async (at) => {
 }
 
 const createConversation = async (at, query, tabId) => {
+    if (abortController) {
+        abortController.abort();
+    }
+
+    abortController = new AbortController();
+    abortSignal = abortController.signal;
+
     const url = "https://chat.openai.com/backend-api/conversation"
 
     const config = {
@@ -117,6 +142,8 @@ const createConversation = async (at, query, tabId) => {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${at}`
         },
+        signal: abortSignal,
+
         body: JSON.stringify({
             action: "next",
             messages: [{
@@ -153,12 +180,12 @@ const createConversation = async (at, query, tabId) => {
         while (true) {
             const { value, done } = await reader.read()
             if (done) {
-                if(tabId==="popupGpt"){
+                if (tabId === "popupGpt") {
                     chrome.runtime.sendMessage({ message: "done" })
 
-                }else{
+                } else {
                     chrome.tabs.sendMessage(tabId, { message: 'done' })
-                    
+
                 }
 
                 break
@@ -168,10 +195,10 @@ const createConversation = async (at, query, tabId) => {
                 if (parsedResponse && typeof parsedResponse === 'object' && !parsedResponse?.error) {
                     let answer = parsedResponse?.message?.content?.parts[0]
 
-                    if(tabId==="popupGpt"){
+                    if (tabId === "popupGpt") {
                         chrome.runtime.sendMessage({ message: "answer", answer })
-    
-                    }else{
+
+                    } else {
 
                         chrome.tabs.sendMessage(tabId, { message: 'answer', answer })
                     }
@@ -207,7 +234,7 @@ const main = async (query, tabId) => {
     let at = await getFromStorage('accessToken')
 
     if (!at) {
-        chrome.runtime.sendMessage({ message: "gptErrAnswer",  })
+        chrome.runtime.sendMessage({ message: "gptErrAnswer", })
         // send message to content -type: "auth-error", message: "Please login"
         return
     }
@@ -253,6 +280,10 @@ chrome.runtime.onMessage.addListener(async function (response, sender, sendRespo
     if (message === 'search-occured-gpt') {
         let { query } = response
         // query= "write a js code"
+        if (abortController) {
+            abortController.abort();
+            abortController = null;
+        }
 
         let answer = await main(query, tabId)
         if (answer != undefined) {
@@ -274,9 +305,6 @@ chrome.runtime.onMessage.addListener(async function (response, sender, sendRespo
 
         bard(query, tabId)
 
-    } else if (message === "bard_key_check") {
-        let { bard_keyVal, bardPath } = response
-        bard_key_func(bard_keyVal, bardPath)
     } else if (message === 'session-check') {
         await sessionCheckAndSet()
         chrome.tabs.sendMessage(tabId, { message: 'session-updated' })
@@ -299,7 +327,6 @@ chrome.runtime.onMessage.addListener(async function (response, sender, sendRespo
 
         bard(query, tabId)
 
-        // chrome.runtime.sendMessage({ message: "hello from background" })
     } else if (message === "popup-gpt-searched") {
         let { query } = response
         let tabId = "popupGpt"
@@ -310,17 +337,15 @@ chrome.runtime.onMessage.addListener(async function (response, sender, sendRespo
                 JSON.parse(answer);
                 chrome.runtime.sendMessage({ message: "answer", answer })
 
-                // chrome.tabs.sendMessage(tabId, { message: 'answer', answer })
 
             } catch (error) {
 
-                chrome.runtime.sendMessage({ message: "gptErrAnswer",  })
-                // chrome.tabs.sendMessage(tabId, { message: 'gptErrAnswer' })
+                chrome.runtime.sendMessage({ message: "gptErrAnswer", })
 
             }
 
         }
-    }else if(message === "session-check"){
+    } else if (message === "session-check") {
         sessionCheckAndSet()
     }
 
@@ -332,9 +357,7 @@ chrome.runtime.onMessage.addListener(async function (response, sender, sendRespo
 
 
 const bard = async (query, tabId) => {
-    // return;
 
-    // chrome.storage.local.get(["bard_api_key"]).then(async (result) => {
     chrome.storage.local.get(null, async (result) => {
 
 
@@ -385,50 +408,8 @@ const bard = async (query, tabId) => {
 
 }
 
-const bard_key_func = async (bard_keyVal, bardPath) => {
-    // return;
-
-
-    let preQuery = "1+1"
-
-    let encodeData = `f.req=${encodeURIComponent(`[null,"[[\\"${preQuery}\\"],null,[\\"\\",\\"\\",\\"\\"]]"]`)}&at=${encodeURIComponent(`${bard_keyVal}`)}&`
-
-    await fetch(`https://bard.google.com${bardPath}_/BardChatUi/data/assistant.lamda.BardFrontendService/StreamGenerate?bl=boq_assistant-bard-web-server_20230326.21_p0&_reqid=12758&rt=c`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded'
-        },
-        body: (
-            encodeData
-        )
-
-    })
-        .then(response => response.text())
-        .then(data => {
-            let slicingStartPoint = data.indexOf('[["wrb.fr",null,')
-            let slicingEnPoint = data.indexOf('"af.httprm"')
-            let slicedData = data.slice(slicingStartPoint, slicingEnPoint - 17)
-            let bardParser = JSON.parse(slicedData)
-            let bardAnswer = bardParser[0][2]
-            chrome.storage.local.set({ bard_api_key: bard_keyVal, bard_path: bardPath });
-
-
-        })
-        .catch((error) => {
-            console.log(error)
-
-        })
-
-}
-
-
-
 
 chrome.runtime.onInstalled.addListener(function (details) {
 
-    if (details.reason == chrome.runtime.OnInstalledReason.INSTALL) {
-        chrome.tabs.create({
-            url: 'https://www.google.com/search?q=cat'
-        });
-    }
+
 })

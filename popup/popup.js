@@ -17,11 +17,16 @@ let toggleBtn = document.getElementById("toggleBtn")
 let toggleThumb = document.getElementById("toggleThumb")
 let toggleText = document.getElementById("toggleText")
 let popupContainer = document.getElementById("popupContainer")
+let darkModeIcon = document.getElementById("darkModeIcon")
+let title = document.getElementById("title")
+let logo = document.getElementById("logo")
+let headerSection = document.getElementById("headerSection")
+let disableSection = document.getElementById("disableSection")
+let loginText = document.querySelectorAll(".loginText")
 
 
 let search = document.getElementById("search")
 let query = ""
-// let searchInput = document.getElementById("searchInput")
 
 
 window.onload = function () {
@@ -60,9 +65,9 @@ window.onload = function () {
     });
 
     chrome.storage.local.get(["bardResultStorage"], (result) => {
-        
+
         if (result.bardResultStorage.trim() !== "") {
-            bardResult.innerHTML=result.bardResultStorage
+            bardResult.innerHTML = result.bardResultStorage
             copyBtnListener()
 
         }
@@ -70,7 +75,7 @@ window.onload = function () {
 
     chrome.storage.local.get(["gptResultStorage"], (result) => {
         if (result.gptResultStorage.trim() !== "") {
-            gptResult.innerHTML=result.gptResultStorage
+            gptResult.innerHTML = result.gptResultStorage
             copyBtnListener()
 
 
@@ -80,7 +85,119 @@ window.onload = function () {
     bard_section_div.style.display = "flex"
     bardLoader.style.display = "none"
 
+    chrome.storage.local.get(["mode"], (result) => {
+        if (result.mode === "on") {
+
+            darkModeIcon.src = "../static/images/daymode.png"
+            darkmode()
+
+        } else {
+            darkModeIcon.src = "../static/images/darkmode.png"
+            daymode()
+
+        }
+    })
+    localeFile()
+
 };
+
+const localeFile = () => {
+    let disableText =document.getElementById("disableText")
+    let rate= document.getElementById("rate")
+
+
+    disableText.innerText= chrome.i18n.getMessage("appDisablingText")
+    searchInput.setAttribute("placeholder",chrome.i18n.getMessage("appPlaceholder"))
+    document.querySelectorAll(".cloudfare").forEach((e)=>e.innerText=chrome.i18n.getMessage("appCloudsecurity"))
+    document.querySelectorAll(".loginText1").forEach((e)=>e.innerText=chrome.i18n.getMessage("appLogintext1"))
+    document.querySelectorAll(".loginText2").forEach((e)=>e.innerText=chrome.i18n.getMessage("appLoginText"))
+    rate.innerText=chrome.i18n.getMessage("appRating")
+}
+
+darkModeIcon.addEventListener("click", () => {
+    if (darkModeIcon.src.match("darkmode")) {
+        darkModeIcon.src = "../static/images/daymode.png"
+        darkmode()
+        chrome.storage.local.set({ mode: "on" })
+
+
+
+        chrome.tabs.query({}, function (tabs) {
+            tabs.forEach(function (tab) {
+                chrome.tabs.sendMessage(tab.id, { message: 'dark' });
+            });
+        });
+    } else {
+        daymode()
+        darkModeIcon.src = "../static/images/darkmode.png"
+
+        chrome.storage.local.set({ mode: "off" })
+
+        chrome.tabs.query({}, function (tabs) {
+            tabs.forEach(function (tab) {
+                chrome.tabs.sendMessage(tab.id, { message: 'day' });
+            });
+        });
+
+    }
+})
+
+const darkmode = () => {
+    title.style.background = "#151515"
+    logo.src = "../static/images/bardGptLogowhite.png"
+    headerSection.style.background = "#131314"
+    headerSection.style.color = "#fff"
+    bard_section_div.style.background = "#222327"
+    bardResult.style.background = "#222327"
+    bardResult.style.color = "#fff"
+
+    gpt_section_div.style.background = "#222327"
+    gptResult.style.background = "#222327"
+    gptResult.style.color = "#fff"
+
+    popupContainer.style.background = "#151515"
+    disableSection.style.background = "#222327"
+    disableSection.style.color = "#fff"
+    toggleBtn.style.border = "1.2px solid #fff"
+    searchInput.style.background = "#131314"
+    searchInput.style.border = "2px solid #5D77A3"
+    searchInput.style.color = "#fff"
+    document.querySelector("body").style.background = "#131314"
+    loginText.forEach((e) => {
+
+        e.style.color = "#fff"
+    })
+}
+
+const daymode = () => {
+    title.style.background = "#F6F5F8"
+    logo.src = "../static/images/bardGptLogo.png"
+    headerSection.style.background = "#fff"
+    headerSection.style.color = "#000"
+    bard_section_div.style.background = "#fff"
+    bardResult.style.background = "#fff"
+    bardResult.style.color = "#000"
+
+    gpt_section_div.style.background = "#fff"
+    gptResult.style.background = "#fff"
+    gptResult.style.color = "#000"
+
+    popupContainer.style.background = "#F6F5F8"
+    disableSection.style.background = "#fff"
+    disableSection.style.color = "#000"
+    toggleBtn.style.border = "1.2px solid #000"
+
+    searchInput.style.background = "#F3F6FC"
+    searchInput.style.border = "2px solid #E0E0E0"
+    searchInput.style.color = "#000"
+    document.querySelector("body").style.background = "#fff"
+
+    loginText.forEach((e) => {
+        e.style.color = "#000"
+    })
+
+}
+
 
 
 
@@ -206,7 +323,6 @@ let resultClear = () => {
 
 
 const copyBtnListener = () => {
-    // let panel = document.querySelector("#panel")
     let allCodeTag = popupContainer.querySelectorAll("code")
     allCodeTag.forEach((e) => {
 
@@ -215,7 +331,7 @@ const copyBtnListener = () => {
 
             // Create copyPanel only if it doesn't exist
             let copyPanel = document.createElement("div")
-            copyPanel.setAttribute("id", "copyPanel")   
+            copyPanel.setAttribute("id", "copyPanel")
             parentNode.insertBefore(copyPanel, e);
 
             let copyDiv = document.createElement("div")
@@ -241,9 +357,6 @@ const copyBtnListener = () => {
                 }, 2000)
             })
         }
-        // let copyPanel = document.createElement("div")
-        // copyPanel.setAttribute("id", "copyPanel")
-        // e.parentNode.insertBefore(copyPanel, e);
 
     })
 }

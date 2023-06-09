@@ -8,15 +8,34 @@
     width: 350px;
     height: 40px;
     background: #F6F5F8;
-
     display: flex;
     justify-content: center;
     align-items: center;
+    position: relative;
 }
 
 #title img {
     height: 25px;
 }
+
+#darkModeDiv {
+    width: 20px;
+    height: 20px;
+    /* background-color: red; */
+    position: absolute;
+    top: 10px;
+    left: 298px;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+#darkModeDiv img {
+    height: 12px;
+    cursor: pointer;
+}
+
+
 
 #disableSection {
     width: 100%;
@@ -193,15 +212,24 @@
     justify-content: center;
     align-items: center;
     position: relative;
+    margin-top: 5px;
 }
 
 #searchDiv input {
     width: 100%;
     height: 100%;
-    border: 1.5px solid #4692f8;
+    /* border: 1.5px solid #4692f8; */
     padding: 3px 30px 4px 10px;
-    border-radius: 5px;
+    /* border-radius: 12px; */
     position: relative;
+    background: #F3F6FC;
+    border: 2px solid #E0E0E0;
+    border-radius: 20px;
+}
+
+#searchDiv input::placeholder {
+    font-size: 14px;
+    color: #9C9FA3;
 }
 
 #searchDiv img {
@@ -223,6 +251,7 @@ code {
     padding: 10px;
     overflow-x: auto;
     font-size: 14px;
+    color: #000;
 }
 
 #bard_login {
@@ -366,4 +395,18 @@ code {
 #gpt-result::-webkit-scrollbar-thumb:hover {
     background: #d9d9d9;
     border-radius: 8px;
+}
+
+#ratingSection {
+    width: 100%;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+#rating {
+    font-size: 14px;
+    color: #818181;
+    text-decoration: none;
 }

@@ -1,11 +1,13 @@
 
 
 let query = ""
-let gpt_access_token_validity   
+// let gpt_access_token_validity
 let panelHeight
 let gptDone = 0
 let bardDone = 0
+let gptFetchStats = 0
 let targetLocation = window.location.hostname
+let selectors = ['.GyAeWb', '#b_context', '#right', '[data-area="sidebar"]', '#content_right', '.content__right']
 
 let icon = chrome.runtime.getURL("static/images/icon64.png")
 let gptLogo = chrome.runtime.getURL("static/images/gptLogo.svg")
@@ -18,6 +20,14 @@ let editingIcon = chrome.runtime.getURL("static/images/editingIcon.svg")
 let searchIcon = chrome.runtime.getURL("static/images/searchIcon.svg")
 let copyIcon = chrome.runtime.getURL("static/images/copyIcon.svg")
 let closeIcon = chrome.runtime.getURL("static/images/closeIcon.png")
+let bardGptLogo = chrome.runtime.getURL("static/images/bardGptLogo.png")
+let bardGptLogoWhite = chrome.runtime.getURL("static/images/bardGptLogowhite.png")
+
+let dayIcon = chrome.runtime.getURL("static/images/daymode.png")
+let darkIcon = chrome.runtime.getURL("static/images/darkmode.png")
+let starIcon = chrome.runtime.getURL("static/images/star.png")
+
+
 
 const bard_key_func = () => {
     const bard_interval = setInterval(() => {
@@ -31,7 +41,8 @@ const bard_key_func = () => {
             let bard_key_parser = JSON.parse(bard_key_sliced)
             let bard_keyVal = bard_key_parser.SNlM0e
             let bardPath = window.location.pathname
-            chrome.runtime.sendMessage({ message: 'bard_key_check', bard_keyVal, bardPath })
+            // chrome.runtime.sendMessage({ message: 'bard_key_check', bard_keyVal, bardPath })
+            chrome.storage.local.set({ bard_api_key: bard_keyVal, bard_path: bardPath });
 
             clearInterval(bard_interval)
         }
@@ -42,9 +53,9 @@ if (window.location.href === "https://bard.google.com/") {
     bard_key_func()
 }
 
-if (targetLocation.includes("www.google.")) {
+if (targetLocation.includes("www.google.") || targetLocation.includes("www.bing.") || targetLocation.includes("search.yahoo.") || targetLocation.includes("duckduckgo.") || targetLocation.includes("www.baidu.") || targetLocation.includes("yandex.")) {
     chrome.storage.local.get(["toggleState"], (result) => {
-        if(result.toggleState==="on"){
+        if (result.toggleState === "on") {
             waitUntilVideoElementLoads()
         }
     })
@@ -53,57 +64,351 @@ if (targetLocation.includes("www.google.")) {
 async function waitUntilVideoElementLoads() {
     return await new Promise((resolve) => {
         const interval = setInterval(() => {
-            let element = document.querySelector(".GyAeWb")
+            let element = document.querySelector(selectors.map((e) => {
+                return e;
+            }))
 
             let finalState = true;
 
             if (!element) finalState = false;
 
             if (finalState) {
-                let searchContent = document.querySelectorAll(`[aria-label="Search"]`)[0].value
-                query = searchContent
+                if (targetLocation.includes("www.google.")) {
 
-                const panel = document.createElement("div");
-                panel.setAttribute("id", "panel");
+                    googleIntegration(element)
 
-                let google_inner_div = document.querySelector(".TQc1id.rhstc4")
-                let google_map_page = document.querySelector("#search > div")
-                let google_page_page1 = document.querySelector(".TQc1id.rhstc5.N4Xssf")
+                } else if (targetLocation.includes("www.bing.")) {
+                    bingIntegration(element)
+                }
+                else if (targetLocation.includes("search.yahoo.")) {
+                    yahooIntegration(element)
+                } else if (targetLocation.includes("duckduckgo.")) {
+                    duckduckIntegration(element)
+                } else if (targetLocation.includes("www.baidu.")) {
+                    baiduIntegration(element)
+                } else if (targetLocation.includes("yandex.")) {
+                    yandexIntegration(element)
+                }
 
-
-
-                if (google_inner_div) {
-                    google_inner_div.prepend(panel)
-
-                } else if (google_page_page1) {
-                    google_page_page1.prepend(panel)
-                } else if (google_map_page) {
-                    element.style.flexWrap = "wrap"
-                    google_map_page.appendChild(panel)
-                    google_map_page.style.display = "flex"
-                    google_map_page.style.width = "180%"
-                    if (document.querySelector("#rso")) {
-                        let rsoElem = document.querySelector("#rso").children
-
-                        for (let i = 0; i < rsoElem.length; i++) {
-                            rsoElem[i].style.width = "600px"
-                            panel.style.marginLeft = "85px";
-                        }
+                chrome.storage.local.get(["mode"], (result) => {
+                    if (result.mode === "on") {
+                        darkmode()
+                    } else {
+                        daymode()
                     }
-                }
-                else {
-                    element.style.flexWrap = "nowrap"
-                    element.appendChild(panel)
-                }
-
-                header(panel)
-                bard_section(panel)
-                gpt_section(panel)
+                })
 
                 clearInterval(interval);
             }
         }, 1000);
     });
+}
+
+
+const googleIntegration = (element) => {
+    let searchContent = document.querySelectorAll(`[aria-label="Search"]`)[0].value
+    query = searchContent
+
+    // parent of panel
+    let parentPanelDiv = document.createElement("div")
+    parentPanelDiv.setAttribute("id", "parentPanelDiv")
+
+    let google_inner_div = document.querySelector(".TQc1id.rhstc4")
+    let google_map_page = document.querySelector("#search > div")
+    let google_page_page1 = document.querySelector(".TQc1id.rhstc5.N4Xssf")
+
+    if (google_inner_div) {
+        google_inner_div.prepend(parentPanelDiv)
+
+    } else if (google_page_page1) {
+        google_page_page1.prepend(parentPanelDiv)
+    } else if (google_map_page) {
+        element.style.flexWrap = "wrap"
+        google_map_page.appendChild(parentPanelDiv)
+        google_map_page.style.display = "flex"
+        google_map_page.style.width = "180%"
+        if (document.querySelector("#rso")) {
+            let rsoElem = document.querySelector("#rso").children
+
+            for (let i = 0; i < rsoElem.length; i++) {
+                rsoElem[i].style.width = "600px"
+                parentPanelDiv.style.marginLeft = "85px";
+            }
+        }
+    }
+    else {
+        element.style.flexWrap = "nowrap"
+        element.appendChild(parentPanelDiv)
+    }
+    panelCreationFn(parentPanelDiv)
+}
+
+
+const bingIntegration = (element) => {
+    let searchContent = document.querySelector("#sb_form_q").value
+    query = searchContent
+
+    // parent of panel
+    let parentPanelDiv = document.createElement("div")
+    parentPanelDiv.setAttribute("id", "parentPanelDiv")
+
+    element.prepend(parentPanelDiv)
+
+    panelCreationFn(parentPanelDiv)
+}
+
+const yahooIntegration = (element) => {
+    let searchContent = document.querySelector(".sbq").value
+    query = searchContent
+
+    let parentPanelDiv = document.createElement("div")
+    parentPanelDiv.setAttribute("id", "parentPanelDiv")
+
+    element.prepend(parentPanelDiv)
+
+    panelCreationFn(parentPanelDiv)
+}
+
+const duckduckIntegration = (element) => {
+    let searchContent = document.querySelector("#search_form_input").value
+    query = searchContent
+
+    let parentPanelDiv = document.createElement("div")
+    parentPanelDiv.setAttribute("id", "parentPanelDiv")
+
+    element.prepend(parentPanelDiv)
+
+    panelCreationFn(parentPanelDiv)
+}
+
+const baiduIntegration = (element) => {
+    let searchContent = document.querySelector("#kw").value
+    query = searchContent
+
+    let parentPanelDiv = document.createElement("div")
+    parentPanelDiv.setAttribute("id", "parentPanelDiv")
+
+    element.prepend(parentPanelDiv)
+
+    panelCreationFn(parentPanelDiv)
+}
+
+const yandexIntegration = (element) => {
+    let searchContent = document.querySelector(".input__control").value
+    query = searchContent
+
+    let parentPanelDiv = document.createElement("div")
+    parentPanelDiv.setAttribute("id", "parentPanelDiv")
+
+    element.prepend(parentPanelDiv)
+
+    panelCreationFn(parentPanelDiv)
+}
+
+
+const panelCreationFn = (parentPanelDiv) => {
+    //header parent panel
+    let headerPanel = document.createElement("div")
+    headerPanel.setAttribute("id", "headerPanel")
+
+    const panel = document.createElement("div");
+    panel.setAttribute("id", "panel");
+
+    parentPanelDiv.appendChild(headerPanel)
+    headerPanelSection(headerPanel)
+    parentPanelDiv.appendChild(panel)
+    inputSection(parentPanelDiv)
+    ratingFn(parentPanelDiv)
+
+
+    header(panel)
+    bard_section(panel)
+    gpt_section(panel)
+}
+
+const headerPanelSection = (headerPanel) => {
+    let headerLogo = document.createElement("img")
+    headerLogo.setAttribute("id", "headerLogo")
+    headerLogo.setAttribute("alt", "bard")
+    headerLogo.src = bardGptLogo
+    headerPanel.appendChild(headerLogo)
+
+    let darkModeIcon = document.createElement("img")
+    darkModeIcon.setAttribute("id", "darkModeIcon")
+    darkModeIcon.src = darkIcon
+    headerPanel.appendChild(darkModeIcon)
+
+    darkModeIcon.addEventListener("click", () => {
+        // darkmode()
+        if (darkModeIcon.src === darkIcon) {
+            darkmode()
+            chrome.storage.local.set({ mode: "on" })
+        } else {
+            daymode()
+            chrome.storage.local.set({ mode: "off" })
+
+        }
+
+    })
+
+
+}
+
+const darkmode = () => {
+    let darkModeIcon = document.getElementById("darkModeIcon")
+    let headerLogo = document.getElementById("headerLogo")
+    let parentPanelDiv = document.getElementById("parentPanelDiv")
+    let header_section = document.getElementById("header_section")
+    let bard_section_div = document.getElementById("bard_section_div")
+    let gpt_section_div = document.getElementById("gpt_section_div")
+    let loginTextDiv1 = document.getElementById("loginTextDiv1")
+    let draggable_bard_gpt = document.getElementById("draggable_bard_gpt")
+    let dragging_panel_gpt = document.getElementById("dragging_panel_gpt")
+    let followInput = document.getElementById("followInput")
+
+
+    if (darkModeIcon) {
+        darkModeIcon.src = dayIcon
+        parentPanelDiv.style.background = "#151515"
+        headerLogo.src = bardGptLogoWhite
+        followInput.style.background = "#131314"
+        followInput.style.border = "2px solid #5D77A3"
+        followInput.style.color = "#fff"
+    }
+    if (draggable_bard_gpt) {
+        draggable_bard_gpt.style.background = "#151515"
+        dragging_panel_gpt.style.backgroundImage = 'url("' + bardGptLogoWhite + '")';
+    }
+
+    header_section.style.background = "#131314"
+    header_section.style.color = "#E8EAED"
+    bard_section_div.style.background = "#2C2C2C"
+    bard_section_div.style.color = "#fff"
+    gpt_section_div.style.background = "#2C2C2C"
+    gpt_section_div.style.color = "#fff"
+
+
+    if (loginTextDiv1) {
+
+        loginTextDiv1.style.color = "#fff"
+
+    }
+
+}
+
+const daymode = () => {
+    let darkModeIcon = document.getElementById("darkModeIcon")
+    let headerLogo = document.getElementById("headerLogo")
+    let parentPanelDiv = document.getElementById("parentPanelDiv")
+    let header_section = document.getElementById("header_section")
+    let bard_section_div = document.getElementById("bard_section_div")
+    let gpt_section_div = document.getElementById("gpt_section_div")
+    let loginTextDiv1 = document.getElementById("loginTextDiv1")
+    let draggable_bard_gpt = document.getElementById("draggable_bard_gpt")
+    let dragging_panel_gpt = document.getElementById("dragging_panel_gpt")
+    let followInput = document.getElementById("followInput")
+
+    if (darkModeIcon) {
+        darkModeIcon.src = darkIcon
+        parentPanelDiv.style.background = "#F6F5F8"
+        headerLogo.src = bardGptLogo
+        followInput.style.background = "#F3F6FC"
+        followInput.style.border = "2px solid #E0E0E0"
+        followInput.style.color = "#000"
+    }
+    if (draggable_bard_gpt) {
+        draggable_bard_gpt.style.background = "#f6f5f8"
+        dragging_panel_gpt.style.backgroundImage = 'url("' + bardGptLogo + '")';
+
+
+    }
+
+    header_section.style.background = "#fff"
+    header_section.style.color = "#000"
+    bard_section_div.style.background = "#fff"
+    bard_section_div.style.color = "#000"
+    gpt_section_div.style.background = "#fff"
+    gpt_section_div.style.color = "#000"
+
+    if (loginTextDiv1) {
+        loginTextDiv1.style.color = "#3c453c"
+
+    }
+}
+
+const inputSection = (parentDiv) => {
+    let inputDiv = document.createElement("div")
+    inputDiv.setAttribute("id", "inputDiv")
+    parentDiv.appendChild(inputDiv)
+
+    // creating input and search
+    let followInput = document.createElement("input")
+    followInput.setAttribute("id", "followInput")
+    followInput.setAttribute("type", "text")
+    followInput.setAttribute("placeholder", chrome.i18n.getMessage("appPlaceholder"))
+
+    inputDiv.appendChild(followInput)
+
+    followInput.addEventListener("keydown", function (event) {
+
+        if (event.keyCode === 13) {
+
+            gptFetchStats = 0
+
+
+            if (document.getElementById("gpt_section_div").style.display === "flex") {
+                query = followInput.value
+                if (document.getElementById("bard_section_div")) {
+                    document.getElementById("bard_section_div").innerText = ""
+
+                }
+                if (document.getElementById("gpt_section_div")) {
+                    document.getElementById("gpt_section_div").innerText = ""
+
+                }
+                gpt_btn_listener()
+
+
+            } else if (document.getElementById("bard_section_div").style.display === "flex") {
+                query = followInput.value
+
+                if (document.getElementById("bard_section_div")) {
+                    document.getElementById("bard_section_div").innerText = ""
+
+                }
+                if (document.getElementById("gpt_section_div")) {
+                    document.getElementById("gpt_section_div").innerText = ""
+
+                }
+
+                bard_btn_listener()
+            }
+        }
+    });
+}
+
+const ratingFn = (parentDiv) => {
+    let ratingDiv = document.createElement("div")
+    ratingDiv.setAttribute("id", "ratingDiv")
+    parentDiv.appendChild(ratingDiv)
+
+    let ratingLink = document.createElement("a")
+    ratingLink.setAttribute("target", "blank")
+    ratingLink.href = "https://chrome.google.com/webstore/detail/bard-for-google/hnadleianomnjcoeplifgbkiejchjmah/reviews"
+    ratingDiv.appendChild(ratingLink)
+
+    let ratingText = document.createElement("span")
+    ratingText.setAttribute("id", "ratingText")
+    ratingText.innerText = chrome.i18n.getMessage("appRating")
+    ratingLink.appendChild(ratingText)
+
+    let ratingImg = document.createElement("img")
+    ratingImg.setAttribute("id", "ratingImg")
+    ratingImg.setAttribute("alt", "bardRating")
+    ratingImg.src = starIcon
+    ratingLink.appendChild(ratingImg)
+
+
 }
 
 const header = (panel) => {
@@ -149,21 +454,6 @@ let Bard_Header_creation = (headerSection) => {
     bard_header.addEventListener("click", bard_btn_listener)
 
 
-    //mouse hove and mouse out event on header
-    bard_header.addEventListener("mouseover", () => {
-        if (document.getElementById("bard_section_div").style.display !== "flex") {
-            bard_header_container.style.opacity = "1"
-        }
-
-    })
-    bard_header.addEventListener("mouseout", () => {
-
-        if (document.getElementById("bard_section_div").style.display !== "flex") {
-            bard_header_container.style.opacity = "0.5"
-
-        }
-    })
-
 }
 let bard_btn_listener = () => {
     // bard header Event
@@ -201,7 +491,6 @@ let bard_btn_listener = () => {
     }
 
 
-    // })
 }
 
 let gpt_Header_creation = (headerSection) => {
@@ -233,22 +522,6 @@ let gpt_Header_creation = (headerSection) => {
 
     gpt_header.addEventListener("click", gpt_btn_listener)
 
-    //mouse hove and mouse out event on header
-    gpt_header.addEventListener("mouseover", () => {
-        if (document.getElementById("gpt_section_div").style.display !== "flex") {
-            gpt_header_container.style.opacity = "1"
-        }
-
-    })
-    gpt_header.addEventListener("mouseout", () => {
-
-        if (document.getElementById("gpt_section_div").style.display !== "flex") {
-            gpt_header_container.style.opacity = "0.5"
-
-        }
-    })
-
-
 
 }
 
@@ -268,14 +541,14 @@ const gpt_btn_listener = () => {
     bard_header_container.style.opacity = "0.5"
     gpt_header_container.style.opacity = "1"
 
-
-
-    if (document.getElementById("gpt_section_div").innerText === "") {
+    // gptFetchStats
+    if (document.getElementById("gpt_section_div").innerText === "" || gptFetchStats === 0) {
+        gptFetchStats = 1
         // check gpt token validity
         let access = chrome.storage.sync.get("accessToken")
         access.then((e) => {
             if (e.accessToken) {
-                gpt_access_token_validity = true
+                // gpt_access_token_validity = true
 
                 if (!document.getElementById("gpt_loader")) {
                     let gpt_loader = document.createElement("img")
@@ -307,7 +580,7 @@ const bard_section = (panel) => {
     let bard_section_div = document.createElement("div")
     bard_section_div.setAttribute("id", "bard_section_div")
     panel.appendChild(bard_section_div)
-
+    bard_section_div.style.display = "flex"
     let bard_access_token = chrome.storage.local.get(["bard_api_key"])
     bard_access_token.then((e) => {
         if (e.bard_api_key) {
@@ -331,8 +604,6 @@ const bard_section = (panel) => {
     })
 
 
-
-
 }
 
 const bard_section_login = (bard_section_div) => {
@@ -353,14 +624,15 @@ const bard_section_login = (bard_section_div) => {
         let warnInfoText = document.createElement("p")
         warnInfoText.setAttribute("id", "warnInfoText")
         bard_login_box.appendChild(warnInfoText)
-        warnInfoText.innerText = "Cloudflare Security check required"
+        warnInfoText.innerText = chrome.i18n.getMessage("appCloudsecurity")
 
         let loginTextDiv1 = document.createElement("div")
         loginTextDiv1.setAttribute("id", "loginTextDiv1")
         bard_login_box.appendChild(loginTextDiv1)
 
+
         let span1 = document.createElement("span")
-        span1.innerText = "Please login "
+        span1.innerText = chrome.i18n.getMessage("appLogintext1") + " "
         loginTextDiv1.appendChild(span1)
 
         let chatGptLink = document.createElement("a")
@@ -371,13 +643,9 @@ const bard_section_login = (bard_section_div) => {
         chatGptLink.target = "_blank"
 
         let span2 = document.createElement("span")
-        span2.innerText = " once and come back"
+        span2.innerText = " " + chrome.i18n.getMessage("appLogintext")
         loginTextDiv1.appendChild(span2)
 
-        // let bard_warn_text = document.createElement("div")
-        // bard_warn_text.setAttribute("id", "bard_warn_text")
-        // bard_warn_text.innerText = "NOTE: Bard may not currently supported in your country"
-        // bard_login_box.appendChild(bard_warn_text)
 
     }
 
@@ -411,14 +679,15 @@ const gpt_section_login = (gpt_section_div) => {
         let warnInfoText = document.createElement("p")
         warnInfoText.setAttribute("id", "warnInfoText")
         gpt_login_box.appendChild(warnInfoText)
-        warnInfoText.innerText = "Cloudflare Security check required"
+        warnInfoText.innerText = chrome.i18n.getMessage("appCloudsecurity")
 
         let loginTextDiv1 = document.createElement("div")
         loginTextDiv1.setAttribute("id", "loginTextDiv1")
         gpt_login_box.appendChild(loginTextDiv1)
 
+
         let span1 = document.createElement("span")
-        span1.innerText = "Please login "
+        span1.innerText = chrome.i18n.getMessage("appLogintext1") + " "
         loginTextDiv1.appendChild(span1)
 
         let chatGptLink = document.createElement("a")
@@ -429,7 +698,7 @@ const gpt_section_login = (gpt_section_div) => {
         chatGptLink.target = "_blank"
 
         let span2 = document.createElement("span")
-        span2.innerText = " once and come back"
+        span2.innerText = " " + chrome.i18n.getMessage("appLogintext")
         loginTextDiv1.appendChild(span2)
     }
 
@@ -535,9 +804,6 @@ const editBtn = (draggableDiv) => {
     })
 
 
-
-
-
     //search button event
     search_Icon.addEventListener("click", () => {
         if (document.getElementById("gpt_section_div").style.display === "flex") {
@@ -556,6 +822,7 @@ const editBtn = (draggableDiv) => {
     })
     editInput.addEventListener("keydown", function (event) {
         if (event.keyCode === 13) {
+
             if (document.getElementById("gpt_section_div").style.display === "flex") {
                 query = editInput.value
                 draggableDivContainer("askGpt")
@@ -698,6 +965,13 @@ const draggableDivContainer = (contexVal) => {
     max_min_Icon.src = minimizeIcon
     panel.style.display = "block"
 
+    chrome.storage.local.get(["mode"], (result) => {
+        if (result.mode === "on") {
+            darkmode()
+        } else {
+            daymode()
+        }
+    })
 
 
 }
@@ -738,9 +1012,7 @@ const copyBtnListener = () => {
                 }, 2000)
             })
         }
-        // let copyPanel = document.createElement("div")
-        // copyPanel.setAttribute("id", "copyPanel")
-        // e.parentNode.insertBefore(copyPanel, e);
+
 
     })
 }
@@ -766,13 +1038,19 @@ chrome.runtime.onMessage.addListener(function (response, sender, sendResponse) {
         const markdown = window.markdownit()
         const html = markdown.render(answer)
         gpt_section_div.innerHTML = html
-        hljs.highlightAll()
+        // hljs.highlightAll(gpt_section_div)
+        if (targetLocation.includes("www.google.") || targetLocation.includes("www.bing.") || targetLocation.includes("search.yahoo.") || targetLocation.includes("duckduckgo.") || targetLocation.includes("www.baidu.") || targetLocation.includes("yandex.")) {
+            hljs.highlightAll(bard_section_div)
+
+        }
         copyBtnListener()
 
 
 
 
+
     } else if (response.message === "gptErrAnswer") {
+
         if (document.getElementById("gpt_loader")) {
             document.getElementById("gpt_loader").remove()
 
@@ -794,12 +1072,15 @@ chrome.runtime.onMessage.addListener(function (response, sender, sendResponse) {
             chatGptLink.innerText = "chat.openai.com"
             chatGptLink.href = "https://chat.openai.com/chat"
             chatGptLink.target = "_blank"
+
+            setTimeout(() => {
+                gptFetchStats = 0
+
+                gpt_btn_listener()
+                gptErrMsg.remove()
+                chatGptLink.remove()
+            }, 5000);
         }
-
-
-
-
-
 
     } else if (response.message === "bardAnswer") {
         let bard_section_div = document.getElementById("bard_section_div")
@@ -808,6 +1089,7 @@ chrome.runtime.onMessage.addListener(function (response, sender, sendResponse) {
             document.getElementById("bard_loader").remove()
 
         }
+        // bard_section_div.style.display="flex"
         bard_section_div.style.justifyContent = "flex-start"
         bard_section_div.style.alignItems = "flex-start"
         bard_section_div.style.flexDirection = "column"
@@ -823,12 +1105,20 @@ chrome.runtime.onMessage.addListener(function (response, sender, sendResponse) {
 
                 const markdown = window.markdownit()
                 const html = markdown.render(final_bard_answer[0][0])
+                console.log(final_bard_answer)
                 bard_section_div.innerHTML = html
-                hljs.highlightAll()
+                if (targetLocation.includes("www.google.") || targetLocation.includes("www.bing.") || targetLocation.includes("search.yahoo.") || targetLocation.includes("duckduckgo.") || targetLocation.includes("www.baidu.") || targetLocation.includes("yandex.")) {
+                    hljs.highlightAll(bard_section_div)
+
+                }
+
                 copyBtnListener()
                 bardDone = 1
 
+
+
             } catch (error) {
+
                 bard_section_login(bard_section_div)
 
             }
@@ -837,12 +1127,16 @@ chrome.runtime.onMessage.addListener(function (response, sender, sendResponse) {
 
 
     } else if (response.message === "bardNotAvailable") {
-        if (document.getElementById("gpt_loader")) {
-            document.getElementById("gpt_loader").remove()
+
+        if (document.getElementById("bard_loader")) {
+            document.getElementById("bard_loader").remove()
 
         }
         let bard_section_div = document.getElementById("bard_section_div")
-        bard_section_div.innerHTML = "Bard isn't currently supported in your country. Stay tuned!"
+        // bard_section_div.innerHTML = "Bard isn't currently supported in your country. Stay tuned!"
+        bard_section_login(bard_section_div)
+
+
 
     } else if (response.message === "askBard") {
         let { selectedText } = response
@@ -856,6 +1150,10 @@ chrome.runtime.onMessage.addListener(function (response, sender, sendResponse) {
         if (document.getElementById("panel_edit_panel") && document.getElementById("gpt_section_div").style.display === "flex") {
             gptDone = 1
         }
+    } else if (response.message === "day") {
+        daymode()
+    } else if (response.message === "dark") {
+        darkmode()
     }
 })
 
@@ -932,4 +1230,3 @@ if (window.location.href.includes("https://bard.google.com/")) {
 }
 
 
-  

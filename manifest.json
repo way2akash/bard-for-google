@@ -1,8 +1,9 @@
 {
   "manifest_version": 3,
-  "version": "1.0.6",
-  "name": "Bard For Google",
-  "description": "Install Bard for Google Chrome Extension and get Google Bard AI responses along with Google search results.",
+  "version": "1.0.8",
+  "name": "__MSG_appTitle__",
+  "description": "__MSG_appDesc__",
+  "default_locale": "en",
   "background": {
     "service_worker": "background.js"
   },
@@ -22,9 +23,9 @@
       "matches": [
         "<all_urls>"
       ],
-      "js": ["content/highlight.min.js", "content/markdown-it.min.js", "content/content.js"],
+      "js": ["content/highlight.min.js", "content/docs.js", "content/markdown-it.min.js", "content/content.js"],
 
-      "css": ["css/github.css", "css/content.css"]
+      "css": [ "css/content.css"]
     }
   ],
   "permissions": ["notifications", "storage", "contextMenus"],
@@ -43,6 +44,10 @@
         "static/images/bardLogo.svg", 
         "static/images/bardGptLogo.png", 
         "static/images/closeIcon.png", 
+        "static/images/daymode.png",
+        "static/images/darkmode.png",
+        "static/images/bardGptLogowhite.png",
+        "static/images/star.png",
         "static/font/Roboto-Regular.ttf"
       ],
       "matches": ["<all_urls>"]

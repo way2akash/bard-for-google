@@ -12,11 +12,14 @@
 
 <body>
     <div id="title">
-        <img src="../static/images/bardGptLogo.png" alt="">
+        <img id="logo" src="../static/images/bardGptLogo.png" alt="">
+        <div id="darkModeDiv">
+            <img id="darkModeIcon" src="../static/images/darkmode.png" alt="">
+        </div>
     </div>
 
     <div id="disableSection">
-        <p>Disable for search engine</p>
+        <p id="disableText">Disable for search engine</p>
         <div id="toggleBtn">
                 <div id="toggleThumb">
                 </div>
@@ -58,8 +61,8 @@
             <div id="bard_login">
                 <img src="../static/images/info.png" alt="">
                 <p class="cloudfare">Cloudflare Security check required</p>
-                <p class="loginText">Please login <a href="https://bard.google.com/" target="_blank">bard.google.com</a>
-                    once and come back
+                <p class="loginText"> <span class="loginText1" >Please login</span>  <a href="https://bard.google.com/" target="_blank">bard.google.com</a>
+                    <span class="loginText2">once and come back</span>
                 </p>
             </div>
 
@@ -77,8 +80,8 @@
             <div id="gpt_login">
                 <img src="../static/images/info.png" alt="">
                 <p class="cloudfare">Cloudflare Security check required</p>
-                <p class="loginText">Please login <a href="https://chat.openai.com/chat"
-                        target="_blank">chat.openai.com</a> once and come back
+                <p class="loginText"><span class="loginText1">Please login</span> <a href="https://chat.openai.com/chat"
+                        target="_blank">chat.openai.com</a> <span class="loginText2">once and come back</span>
                 </p>
             </div>
 
@@ -86,8 +89,17 @@
         </div>
 
         <div id="searchDiv">
-            <input type="text" id="searchInput">
+            <input type="text" placeholder="Enter your follow-up here" id="searchInput">
             <img src="../static/images/searchIcon.svg" alt="" id="search">
+
+        </div>
+
+        <div id="ratingSection">
+            <a href="https://chrome.google.com/webstore/detail/bard-for-google/hnadleianomnjcoeplifgbkiejchjmah/reviews"  target="_blank" id="rating">
+                <span id="rate">Rate us</span>
+                <img src="../static/images/star.png" alt="">
+
+            </a>
 
         </div>
 
