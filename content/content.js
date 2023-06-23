@@ -5,7 +5,7 @@ let bardquery = ""
 let bardFirstAns = ""
 let gptFirstAns = ""
 let targetLocation = window.location.hostname
-let selectors = ['.GyAeWb', '#b_context', '#right', '[data-area="sidebar"]', '#content_right', '.content__right']
+let selectors = ['.GyAeWb', '#b_context', '#right', '[data-area="sidebar"]', '#content_right', '.content__right','.kix-appview-editor-container']
 let bard_conv_id = {
     Cval: "",
     Rval: "",
@@ -59,7 +59,7 @@ if (window.location.href === "https://bard.google.com/") {
 
 
 //search page domain list where div will be injected
-if (targetLocation.includes("www.google.") || targetLocation.includes("www.bing.") || targetLocation.includes("search.yahoo.") || targetLocation.includes("duckduckgo.") || targetLocation.includes("www.baidu.") || targetLocation.includes("yandex.")) {
+if (targetLocation.includes("docs.google.") ||targetLocation.includes("www.google.") || targetLocation.includes("www.bing.") || targetLocation.includes("search.yahoo.") || targetLocation.includes("duckduckgo.") || targetLocation.includes("www.baidu.") || targetLocation.includes("yandex.")) {
     chrome.storage.local.get(["toggleState"], (result) => {
         if (result.toggleState === "on") {
             waitUntilVideoElementLoads()
@@ -83,7 +83,12 @@ async function waitUntilVideoElementLoads() {
             if (finalState) {
                 if (targetLocation.includes("www.google.")) {
                     googleIntegration(element)
-                } else if (targetLocation.includes("www.bing.")) {
+                } 
+                else if(targetLocation.includes("docs.google.")){
+
+                    docsintegration(element)
+
+                }else if (targetLocation.includes("www.bing.")) {
                     bingIntegration(element)
                 }
                 else if (targetLocation.includes("search.yahoo.")) {
@@ -151,6 +156,23 @@ const googleIntegration = (element) => {
     }
     titleSecCreationFn(parentPanelDiv)
 
+}
+
+//docs integration
+const docsintegration=(element)=>{
+    gptquery = "Hi"
+    bardquery = "Hi"
+    let classfetch=document.querySelector(".kix-appview-editor-container")
+    classfetch.style.display="flex"
+    let canvafetch=document.querySelector(".kix-appview-editor")
+    canvafetch.style.width="70%"
+    let parentPanelDiv = document.createElement("div")
+    parentPanelDiv.setAttribute("id", "parentPanelDiv")
+    parentPanelDiv.style.margin="10px"
+    
+        element.append(parentPanelDiv)
+        titleSecCreationFn(parentPanelDiv)
+    
 }
 
 //bing search page
