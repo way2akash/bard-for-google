@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "version": "1.0.8",
+  "version": "1.0.9",
   "name": "__MSG_appTitle__",
   "description": "__MSG_appDesc__",
   "default_locale": "en",
@@ -41,14 +41,23 @@
         "static/images/editingIcon.svg", 
         "static/images/searchIcon.svg", 
         "static/images/copyIcon.svg", 
+        "static/images/copyIconDark.svg", 
+        "static/images/chatIcon.svg", 
+        "static/images/ratingStar.svg", 
+        "static/images/enterIcon.svg", 
+
         "static/images/bardLogo.svg", 
-        "static/images/bardGptLogo.png", 
+        "static/images/bardGptLogo.svg", 
         "static/images/closeIcon.png", 
         "static/images/daymode.png",
         "static/images/darkmode.png",
         "static/images/bardGptLogowhite.png",
         "static/images/star.png",
-        "static/font/Roboto-Regular.ttf"
+        "static/images/lightmoon.svg",
+        "static/images/darkmoon.svg",
+
+        "static/font/Roboto-Regular.ttf",
+        "static/font/Inter-Regular.ttf"
       ],
       "matches": ["<all_urls>"]
     }

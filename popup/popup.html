@@ -1,9 +1,10 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bard For Google</title>
-    
     <link rel="stylesheet" href="popup.css">
     <script src="../content/markdown-it.min.js"></script>
     <script src="../content/highlight.min.js"></script>
@@ -11,101 +12,113 @@
 </head>
 
 <body>
-    <div id="title">
-        <img id="logo" src="../static/images/bardGptLogo.png" alt="">
-        <div id="darkModeDiv">
-            <img id="darkModeIcon" src="../static/images/darkmode.png" alt="">
-        </div>
-    </div>
-
-    <div id="disableSection">
-        <p id="disableText">Disable for search engine</p>
-        <div id="toggleBtn">
-                <div id="toggleThumb">
-                </div>
-                <span id="toggleText">ON</span>
-        </div>
-    </div>
-
 
     <div id="popupContainer">
-        <div id="headerSection">
 
-            <div id="bardHeader">
-                <div id="bard_header_section">
-                    <img src="../static/images/bardLogo.svg" alt="">
-                    <p>Bard AI</p>
+        <div id="titleSection">
+            <img id="titleLogo" alt="bard" src="../static/images/bardGptLogo.svg">
+            <div id="titleOptionDiv">
+                <a id="titleRating"
+                    href="https://chrome.google.com/webstore/detail/bard-for-google/hnadleianomnjcoeplifgbkiejchjmah/reviews"
+                    target="blank">
+                    <img alt="bard for google " id="ratingIcon" src="../static//images/ratingStar.svg">
+                    <div id="rateText">Rate us</div>
+                </a>
+                <div id="mode">
+                    <img id="modeLogo" alt="bard for google dark mode" src="../static//images/lightmoon.svg">
+                </div>
+                <div id="copy">
+                    <img id="copyLogo" alt="bard for google  copy icon" src="../static/images/copyIcon.svg">
+                </div>
+            </div>
+        </div>
+
+
+        <!-- //panel start -->
+        <div id="panel">
+            <div id="headerSection">
+                <div id="bardTab">
+                    <img id="bardTabLogo" alt="bard for google " src="../static//images/bardLogo.svg">
+                    <span id="bardTabText">Bard AI</span>
+                </div>
+                <div id="gptTab">
+                    <img id="gptTabLogo" alt="gpt for google " src="../static//images/gptLogo.svg">
+                    <span id="gptTabText">ChatGPT</span>
+                </div>
+            </div>
+            <div id="bard_section_div">
+                <!-- loader -->
+                <div id="bardLoader">
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                </div>
+
+                <div id="bard-result">
 
                 </div>
-                <div id="bard_header_border"></div>
 
-            </div>
-            <div id="gptHeader">
-                <div id="gpt_header_section">
-                    <img src="../static/images/gptLogo.svg" alt="">
-                    <p>ChatGPT</p>
+                <!-- login section -->
+                <div id="bard_login_box">
+                    <img id="infoDiv" alt="information icon" src="../static/images/info.png">
+                    <p id="warnInfoText">Cloudflare Security check required</p>
+                    <div id="loginTextDiv1">
+                        <span>Please login </span>
+                        <a id="chatGptLink" href="https://bard.google.com/" target="_blank">bard.google.com</a>
+                        <span>
+                            once and come
+                            back</span>
+                    </div>
                 </div>
-                <div id="gpt_header_border"></div>
+            </div>
+            <div id="gpt_section_div">
+                <!-- //loader -->
+                <div id="gptLoader">
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                </div>
+
+                <div id="gpt-result">
+
+                </div>
+
+                <!-- login section -->
+                <div id="gpt_login_box">
+                    <img alt="bard for google information" id="infoDiv" src="../static/images/info.png">
+                    <p id="warnInfoText">Cloudflare Security check required</p>
+                    <div id="loginTextDiv1">
+                        <span>Please login </span>
+                        <a id="chatGptLink" href="https://chat.openai.com/chat" target="_blank">chat.openai.com</a>
+                        <span> once and come back</span>
+                    </div>
+                </div>
 
             </div>
-
-        </div>
-
-        <div id="bard_section_div">
-
-            <img src="../static/images/loader.png" alt="" id="bardLoader">
-            <div id="bard-result">
-
+            <div id="footer_section_div">
+                <div id="rateChatDiv">
+                    <div id="chatTextDiv">
+                        <img alt="bard for google " id="chatImg" src="../static//images/chatIcon.svg">
+                        <div id="chatText">Let’s Chat</div>
+                    </div>
+                    <a id="rateDiv"
+                        href="https://chrome.google.com/webstore/detail/bard-for-google/hnadleianomnjcoeplifgbkiejchjmah/reviews"
+                        target="blank">
+                        <img alt="bard for google " id="ratingIcon" src="../static//images/ratingStar.svg">
+                        <div id="rateText">Rate us</div>
+                    </a>
+                </div>
+                <div id="followUpDiv">
+                    <input id="inputBox" type="text" placeholder="Ask me anything..">
+                    <img alt="bard for google " id="enterImg" src="../static//images/enterIcon.svg">
+                </div>
             </div>
-            <!-- bard login authentication  -->
-            <div id="bard_login">
-                <img src="../static/images/info.png" alt="">
-                <p class="cloudfare">Cloudflare Security check required</p>
-                <p class="loginText"> <span class="loginText1" >Please login</span>  <a href="https://bard.google.com/" target="_blank">bard.google.com</a>
-                    <span class="loginText2">once and come back</span>
-                </p>
-            </div>
-
-
-
         </div>
 
-        <div id="gpt_section_div">
-            <img src="../static/images/loader.png" alt="" id="gptLoader">
-            <div id="gpt-result">
-
-            </div>
-
-            <!-- gpt login authentication  -->
-            <div id="gpt_login">
-                <img src="../static/images/info.png" alt="">
-                <p class="cloudfare">Cloudflare Security check required</p>
-                <p class="loginText"><span class="loginText1">Please login</span> <a href="https://chat.openai.com/chat"
-                        target="_blank">chat.openai.com</a> <span class="loginText2">once and come back</span>
-                </p>
-            </div>
-
-
-        </div>
-
-        <div id="searchDiv">
-            <input type="text" placeholder="Enter your follow-up here" id="searchInput">
-            <img src="../static/images/searchIcon.svg" alt="" id="search">
-
-        </div>
-
-        <div id="ratingSection">
-            <a href="https://chrome.google.com/webstore/detail/bard-for-google/hnadleianomnjcoeplifgbkiejchjmah/reviews"  target="_blank" id="rating">
-                <span id="rate">Rate us</span>
-                <img src="../static/images/star.png" alt="">
-
-            </a>
-
-        </div>
 
     </div>
-</body>
 
+</body>
 <script src="popup.js"></script>
 
 </html>

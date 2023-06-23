@@ -12,7 +12,7 @@ let bard_conv_id = {
     RCval: ""
 }
 let gpt_conv_id = null
-let hideChatMode = true
+let hideChatMode=true
 
 
 // images 
@@ -381,10 +381,6 @@ const header = (panel) => {
     bardTab.setAttribute("id", "bardTab")
     headerSection.appendChild(bardTab)
 
-    // let bardBorder= document.createElement("bardBorder")
-    // bardBorder.setAttribute("id","bardBorder")
-    // bardTab.appendChild(bardBorder)
-
     let bardTabLogo = document.createElement("img")
     bardTabLogo.setAttribute("id", "bardTabLogo")
     bardTabLogo.setAttribute("alt", "bard for google ")
@@ -527,20 +523,6 @@ const gpt_btn_listener = () => {
                     document.getElementById("gpt_login_box").remove()
                 }
                 gptResult.style.display = "flex"
-
-                let copyGptRes = document.createElement("div")
-                copyGptRes.setAttribute("id", "copyGptRes")
-                gptResult.appendChild(copyGptRes)
-                copyGptRes.style.display="none"
-                let gptResCopy = document.createElement("img")
-                gptResCopy.setAttribute("id", "gptResCopy")
-                gptResCopy.src = copyIconDark
-                copyGptRes.appendChild(gptResCopy)
-            
-                gptResCopy.addEventListener("click", () => {
-                    navigator.clipboard.writeText(gptResponseDiv.innerText);
-            
-                })
 
                 chrome.runtime.sendMessage({ message: 'search-occured-gpt', query: gptquery, gpt_conv_id })
 
@@ -805,13 +787,6 @@ const footer_section = (panel) => {
         document.getElementById("copy").style.display = "none"
         footer_section_div.style.border = "none"
 
-        let bardResponseDiv = document.getElementsByClassName("bardResponseDiv")[0]
-        bardResponseDiv.style.background = "#F4F5FA"
-        bardResponseDiv.style.padding = "10px"
-
-        // gptResponseDiv.style.background = "#F4F5FA"
-
-
         let ratingStorage = chrome.storage.local.get(["rated"])
         ratingStorage.then((e) => {
             if (!e.rated) {
@@ -821,7 +796,7 @@ const footer_section = (panel) => {
         })
 
         ChatMode()
-        hideChatMode = false
+        hideChatMode=false
         console.log(hideChatMode, "cmode")
 
     })
@@ -834,7 +809,7 @@ const footer_section = (panel) => {
             Array.from(bardClientDiv).forEach(function (element) {
                 element.style.display = "flex";
             });
-
+        
             Array.from(gptClientDiv).forEach(function (element) {
                 element.style.display = "flex";
             });
@@ -846,7 +821,7 @@ const footer_section = (panel) => {
             Array.from(bardClientDiv).forEach(function (element) {
                 element.style.display = "flex";
             });
-
+        
             Array.from(gptClientDiv).forEach(function (element) {
                 element.style.display = "flex";
             });
@@ -856,7 +831,6 @@ const footer_section = (panel) => {
 
 }
 const ChatMode = () => {
-    console.log("chat mode activated")
     let bardClientDiv = document.querySelectorAll(".bardClientDiv")
     let gptClientDiv = document.querySelectorAll(".gptClientDiv")
     let gptResponseDiv = document.querySelectorAll(".gptResponseDiv")
@@ -1030,13 +1004,7 @@ const bardCopySection = (bardResponseDiv) => {
                 cPanel.style.background = "#1E2336"
             })
         } else {
-            if (!hideChatMode) {
-
-                bardResponseDiv.style.background = "#F4F5FA"
-                bardResponseDiv.style.padding = "10px"
-
-
-            }
+            bardResponseDiv.style.background = "#F4F5FA"
 
             codeTags.forEach((codeTag) => {
                 codeTag.style.background = "#F4F5FA";
@@ -1087,7 +1055,7 @@ let gptCopySection = (gptResponseDiv) => {
             })
 
         } else {
-            // gptResponseDiv.style.background = "#F4F5FA"
+            gptResponseDiv.style.background = "#F4F5FA"
             codeTags.forEach((codeTag) => {
                 codeTag.style.background = "#F4F5FA";
                 codeTag.style.color = "#000";
@@ -1125,18 +1093,18 @@ let bardResponseMsg = (quer) => {
     }
     copyBtnListener()
     bardCopySection(bardResponseDiv)
-    document.getElementById("footer_section_div").style.display = "flex"
+    document.getElementById("footer_section_div").style.display="flex"
     bardResult.scrollTop = bardResponseDiv.offsetTop;
 
-    let copyBardRes = document.createElement("div")
+    let copyBardRes= document.createElement("div")
     copyBardRes.setAttribute("id", "copyBardRes")
-    bardResult.appendChild(copyBardRes)
-    let bardResCopy = document.createElement("img")
-    bardResCopy.setAttribute("id", "bardResCopy")
-    bardResCopy.src = copyIconDark
+    bardResponseDiv.appendChild(copyBardRes)
+    let bardResCopy= document.createElement("img")
+    bardResCopy.setAttribute("id","bardResCopy" )
+    bardResCopy.src=copyIcon
     copyBardRes.appendChild(bardResCopy)
 
-    bardResCopy.addEventListener("click", () => {
+    bardResCopy.addEventListener("click", ()=>{
         navigator.clipboard.writeText(bardResponseDiv.innerText);
 
     })
@@ -1147,39 +1115,52 @@ let bardResponseMsg = (quer) => {
 let gptResponseMsg = (quer) => {
     let gptResponseDivLen = document.getElementsByClassName("gptResponseDiv").length
     let gptResponseDiv = document.getElementsByClassName("gptResponseDiv")[gptResponseDivLen - 1]
-    let gptResult = document.getElementById("gptResult")
-    // let copyGptRes = document.querySelectorAll("#copyGptRes")
-
+    let gptResult= document.getElementById("gptResult")
+    
+    
     gptFirstAns = quer
     // hljs.highlightAll()
     // console.log(quer, "rspos")
     gptResponseDiv.innerHTML = quer
     if (targetLocation.includes("www.google.") || targetLocation.includes("www.bing.") || targetLocation.includes("search.yahoo.") || targetLocation.includes("duckduckgo.") || targetLocation.includes("www.baidu.") || targetLocation.includes("yandex.")) {
         hljs.highlightAll()
-
+        
     }
     copyBtnListener()
     gptCopySection(gptResponseDiv)
-    document.getElementById("footer_section_div").style.display = "flex"
+    document.getElementById("footer_section_div").style.display="flex"
     gptResult.scrollTop = gptResponseDiv.offsetTop;
-    // copyGptRes.forEach((e)=>{
-    //     e.style.display="flex"
-    // })
-    let copyGptRes= document.getElementById("copyGptRes")
-    copyGptRes.style="flex"
 
+    let copyGptRes= document.createElement("div")
+    copyGptRes.setAttribute("id", "copyGptRes")
+    gptResponseDiv.appendChild(copyGptRes)
+    let gptResCopy= document.createElement("img")
+    gptResCopy.setAttribute("id","gptResCopy" )
+    gptResCopy.src=copyIconDark
+    copyGptRes.appendChild(gptResCopy)
 
+    gptResCopy.addEventListener("click", ()=>{
+        navigator.clipboard.writeText(gptResponseDiv.innerText);
 
+    })
 
 
 
 }
 
+// const Scroller=()=>{
+// // const parentContainer = document.getElementById('parent-container');
 
+// const newDiv = document.getElementById('new-div');
+
+// // Scroll the parent container to the end where the new div is located
+// parentContainer.scrollTop = newDiv.offsetTop;
+
+// }
 
 chrome.runtime.onMessage.addListener(function (response, sender, sendResponse) {
     loaderRemoval()
-    if (!hideChatMode) {
+    if(!hideChatMode){
         ChatMode()
     }
 
