@@ -13,6 +13,7 @@ let bard_conv_id = {
 }
 let gpt_conv_id = null
 let hideChatMode = true
+let gptResponseCopy = false
 
 
 // images 
@@ -300,7 +301,6 @@ const titleSecCreationFn = (parentPanelDiv) => {
     mode.addEventListener("click", () => {
 
 
-        console.log("dark ")
         if (modeLogo.src === lightmoon) {
             darkmode()
             chrome.storage.local.set({ mode: "on" })
@@ -350,7 +350,6 @@ const titleSecCreationFn = (parentPanelDiv) => {
 
 
 const loaderCreation = (val) => {
-    console.log(val, "val")
     let loaderDiv = document.createElement("div")
     loaderDiv.setAttribute("id", "loader")
     val.appendChild(loaderDiv)
@@ -528,19 +527,9 @@ const gpt_btn_listener = () => {
                 }
                 gptResult.style.display = "flex"
 
-                let copyGptRes = document.createElement("div")
-                copyGptRes.setAttribute("id", "copyGptRes")
-                gptResult.appendChild(copyGptRes)
-                copyGptRes.style.display="none"
-                let gptResCopy = document.createElement("img")
-                gptResCopy.setAttribute("id", "gptResCopy")
-                gptResCopy.src = copyIconDark
-                copyGptRes.appendChild(gptResCopy)
-            
-                gptResCopy.addEventListener("click", () => {
-                    navigator.clipboard.writeText(gptResponseDiv.innerText);
-            
-                })
+
+
+                gptResponseCopy = true
 
                 chrome.runtime.sendMessage({ message: 'search-occured-gpt', query: gptquery, gpt_conv_id })
 
@@ -602,7 +591,6 @@ const gpt_section = (panel) => {
 
 const bardCall = () => {
     let bardResult = document.getElementById("bardResult")
-    console.log("bar", bardResult)
     bardClientMsg(bardquery)
     loaderCreation(bardResult)
     if (document.getElementById("bard_login_box")) {
@@ -620,6 +608,8 @@ const gptCall = () => {
     if (document.getElementById("gpt_login_box")) {
         document.getElementById("gpt_login_box").remove()
     }
+    gptResponseCopy = true
+
     chrome.runtime.sendMessage({ message: 'search-occured-gpt', query: gptquery, gpt_conv_id })
 }
 
@@ -806,7 +796,19 @@ const footer_section = (panel) => {
         footer_section_div.style.border = "none"
 
         let bardResponseDiv = document.getElementsByClassName("bardResponseDiv")[0]
-        bardResponseDiv.style.background = "#F4F5FA"
+
+        chrome.storage.local.get(["mode"], (result) => {
+            if (result.mode === "on") {
+
+            } else {
+                for (let i = 0; i < bardResponseDiv.length; i++) {
+                    bardResponseDiv[i].style.background = "#161B22";
+                }
+                for (let i = 0; i < bardResponseDiv.length; i++) {
+                    bardResponseDiv[i].style.background = "#F4F5FA";
+                }
+            }
+        })
         bardResponseDiv.style.padding = "10px"
 
         // gptResponseDiv.style.background = "#F4F5FA"
@@ -822,7 +824,6 @@ const footer_section = (panel) => {
 
         ChatMode()
         hideChatMode = false
-        console.log(hideChatMode, "cmode")
 
     })
     let bardClientDiv = document.querySelectorAll(".bardClientDiv")
@@ -856,7 +857,6 @@ const footer_section = (panel) => {
 
 }
 const ChatMode = () => {
-    console.log("chat mode activated")
     let bardClientDiv = document.querySelectorAll(".bardClientDiv")
     let gptClientDiv = document.querySelectorAll(".gptClientDiv")
     let gptResponseDiv = document.querySelectorAll(".gptResponseDiv")
@@ -897,6 +897,7 @@ const followUpFn = () => {
         }
         gptResult.style.display = "flex"
 
+        gptResponseCopy = true
 
         chrome.runtime.sendMessage({ message: 'search-occured-gpt', query: gptquery, gpt_conv_id })
 
@@ -908,7 +909,6 @@ const followUpFn = () => {
 
         // bard_btn_listener()
         let bardResult = document.getElementById("bardResult")
-        console.log("bar", bardResult)
         bardClientMsg(bardquery)
         loaderCreation(bardResult)
         if (document.getElementById("bard_login_box")) {
@@ -974,7 +974,6 @@ const copyBtnListener = () => {
 let bardClientMsg = (quer) => {
 
     let bardResult = document.getElementById("bardResult")
-    console.log(bardResult)
     let bardClientDiv = document.createElement("div")
     bardClientDiv.setAttribute("class", "bardClientDiv")
     bardResult.appendChild(bardClientDiv)
@@ -1152,7 +1151,6 @@ let gptResponseMsg = (quer) => {
 
     gptFirstAns = quer
     // hljs.highlightAll()
-    // console.log(quer, "rspos")
     gptResponseDiv.innerHTML = quer
     if (targetLocation.includes("www.google.") || targetLocation.includes("www.bing.") || targetLocation.includes("search.yahoo.") || targetLocation.includes("duckduckgo.") || targetLocation.includes("www.baidu.") || targetLocation.includes("yandex.")) {
         hljs.highlightAll()
@@ -1162,13 +1160,25 @@ let gptResponseMsg = (quer) => {
     gptCopySection(gptResponseDiv)
     document.getElementById("footer_section_div").style.display = "flex"
     gptResult.scrollTop = gptResponseDiv.offsetTop;
-    // copyGptRes.forEach((e)=>{
-    //     e.style.display="flex"
-    // })
-    let copyGptRes= document.getElementById("copyGptRes")
-    copyGptRes.style="flex"
 
 
+
+    if (gptResponseCopy && quer != "") {
+        let copyGptRes = document.createElement("div")
+        copyGptRes.setAttribute("id", "copyGptRes")
+        gptResult.appendChild(copyGptRes)
+        // copyGptRes.style.display = "none"
+        let gptResCopy = document.createElement("img")
+        gptResCopy.setAttribute("id", "gptResCopy")
+        gptResCopy.src = copyIconDark
+        copyGptRes.appendChild(gptResCopy)
+
+        gptResCopy.addEventListener("click", () => {
+            navigator.clipboard.writeText(gptResponseDiv.innerText);
+
+        })
+        gptResponseCopy = false
+    }
 
 
 
@@ -1185,7 +1195,6 @@ chrome.runtime.onMessage.addListener(function (response, sender, sendResponse) {
 
     if (response.message === 'answer') {
 
-
         let gpt_section_div = document.getElementById("gpt_section_div")
         gpt_section_div.style.justifyContent = "flex-start"
         gpt_section_div.style.alignItems = "flex-start"
@@ -1195,19 +1204,10 @@ chrome.runtime.onMessage.addListener(function (response, sender, sendResponse) {
 
         let { answer, gptConversationId } = response
         gpt_conv_id = gptConversationId
-        // console.log(gptConversationId)
 
         const markdown = window.markdownit()
         const html = markdown.render(answer)
         gptResponseMsg(html)
-        // gpt_section_div.innerHTML = html
-        // if (targetLocation.includes("www.google.") || targetLocation.includes("www.bing.") || targetLocation.includes("search.yahoo.") || targetLocation.includes("duckduckgo.") || targetLocation.includes("www.baidu.") || targetLocation.includes("yandex.")) {
-        //     hljs.highlightAll(bard_section_div)
-
-        // }
-        // copyBtnListener()
-
-
 
 
 
@@ -1243,7 +1243,6 @@ chrome.runtime.onMessage.addListener(function (response, sender, sendResponse) {
 
     } else if (response.message === "bardAnswer") {
         let bard_section_div = document.getElementById("bard_section_div")
-        console.log("recd")
 
 
         // bard_section_div.style.display="flex"
@@ -1259,29 +1258,15 @@ chrome.runtime.onMessage.addListener(function (response, sender, sendResponse) {
 
         } else {
             try {
-                // console.log(bardAnswer)
 
                 const markdown = window.markdownit()
                 const html = markdown.render(final_bard_answer[0][0])
-                console.log(final_bard_answer)
 
                 bard_conv_id.Cval = final_bard_answer[1][0] || ""
                 bard_conv_id.Rval = final_bard_answer[1][1] || ""
                 bard_conv_id.RCval = final_bard_answer[4][0][0] || ""
 
-                console.log(bard_conv_id)
-                // bard_section_div.innerHTML = html
                 bardResponseMsg(html)
-
-                // if (targetLocation.includes("www.google.") || targetLocation.includes("www.bing.") || targetLocation.includes("search.yahoo.") || targetLocation.includes("duckduckgo.") || targetLocation.includes("www.baidu.") || targetLocation.includes("yandex.")) {
-                //     hljs.highlightAll(bard_section_div)
-
-                // }
-
-                // copyBtnListener()
-                // bardDone = 1
-
-
 
             } catch (error) {
 
@@ -1313,11 +1298,7 @@ chrome.runtime.onMessage.addListener(function (response, sender, sendResponse) {
         bardquery = searchContent
         // draggableDivContainer("askGpt")
     }
-    //  else if (response.message === "done") {
-    //     if (document.getElementById("panel_edit_panel") && document.getElementById("gpt_section_div").style.display === "flex") {
-    //         // gptDone = 1
-    //     }
-    // } 
+
     else if (response.message === "light") {
         lightmode()
     } else if (response.message === "dark") {
@@ -1429,6 +1410,7 @@ const lightmode = () => {
     let copyDivs = document.querySelectorAll("#copyDiv")
     let copyBtns = document.querySelectorAll("#copyBtn")
     let copyPanel = document.querySelectorAll("#copyPanel")
+    // let gptResCopy = document.getElementById("gptResCopy")
 
     modeLogo.src = lightmoon
     parentPanelDiv.style.background = "#ffffff"
@@ -1438,8 +1420,7 @@ const lightmode = () => {
     gpt_section_div.style.color = "#4d5156"
     inputBox.style.background = "#FFFFFF"
     inputBox.style.border = "1px solid #E8E8E8"
-    // bardTab.style.color = "#000"
-    // gptTab.style.color = "#000"
+
     headerSection.style.background = "#EFEFEF"
 
     if (loginTextDiv1) {
@@ -1449,14 +1430,7 @@ const lightmode = () => {
         loginTextDiv2.style.color = "#000"
     }
 
-    // if (bardResponseDiv) {
-    //     bardResponseDiv.style.background = "#F4F5FA"
 
-    // }
-    // if (gptResponseDiv) {
-    //     gptResponseDiv.style.background = "#F4F5FA"
-
-    // }
 
     for (let i = 0; i < bardResponseDiv.length; i++) {
         bardResponseDiv[i].style.background = "#F4F5FA";

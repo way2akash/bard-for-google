@@ -258,6 +258,9 @@
     align-items: center;
     cursor: pointer;
     margin-bottom: 10px;
+    background-color: #fff;
+    border-radius: 3px;
+
 }
 #copyBardRes img, #copyGptRes img{
     height: 15px;

@@ -128,7 +128,6 @@ const createConversation = async (at, query, tabId, gpt_conv_id) => {
     if (abortController) {
         abortController.abort();
     }
-    // console.log("create conv", query)
 
     abortController = new AbortController();
     abortSignal = abortController.signal;
@@ -180,10 +179,8 @@ const createConversation = async (at, query, tabId, gpt_conv_id) => {
         const reader = response.body.pipeThrough(new TextDecoderStream()).getReader()
         while (true) {
             const { value, done } = await reader.read()
-            // console.log(value, "vall")
             if (done) {
                 if (tabId === "popupGpt") {
-                    // console.log("popup, gpt done")
                     chrome.runtime.sendMessage({ message: "done" })
 
                 } else {
@@ -198,10 +195,9 @@ const createConversation = async (at, query, tabId, gpt_conv_id) => {
                 if (parsedResponse && typeof parsedResponse === 'object' && !parsedResponse?.error) {
                     let answer = parsedResponse?.message?.content?.parts[0]
                     let gptConversationId = parsedResponse?.conversation_id
-                    // console.log(parsedResponse, "id id")
+
 
                     if (tabId === "popupGpt") {
-                        // console.log("popup, gpt sender")
 
                         chrome.runtime.sendMessage({ message: "answer", answer, gptConversationId })
 
@@ -248,7 +244,6 @@ const main = async (query, tabId, gpt_conv_id) => {
 
 
     try {
-        // console.log("main", query)
         let response = await createConversation(at, query, tabId, gpt_conv_id)
 
 
@@ -281,14 +276,12 @@ const sessionCheckAndSet = async () => {
 // on message for content page
 chrome.runtime.onMessage.addListener(async function (response, sender, sendResponse) {
     const { message } = response
-    console.log(message, response.query)
 
     const tabId = sender.tab.id
     // return;
 
     if (message === 'search-occured-gpt') {
         let { query, gpt_conv_id } = response
-        // console.log(gpt_conv_id, "convoo")
         if (abortController) {
             abortController.abort();
             abortController = null;
@@ -311,7 +304,6 @@ chrome.runtime.onMessage.addListener(async function (response, sender, sendRespo
 
     } else if (message === "search-occured-bard") {
         let { query, bard_conv_id } = response
-        console.log(query)
         bard(query, tabId, bard_conv_id)
 
     } else if (message === 'session-check') {
@@ -329,18 +321,15 @@ chrome.runtime.onMessage.addListener(async function (response, sender, sendRespo
 // on message for popup
 chrome.runtime.onMessage.addListener(async function (response, sender, sendResponse) {
     const { message } = response
-    // console.log("querr", message)
 
     if (message === "popup-bard-searched") {
         let { query ,bard_conv_id} = response
         let tabId = "popupBard"
-        // console.log(query, bard_conv_id)
         bard(query, tabId, bard_conv_id)
 
     } else if (message === "popup-gpt-searched") {
         let { query } = response
         let tabId = "popupGpt"
-        // console.log(query)
 
         let answer = await main(query, tabId)
         if (answer != undefined) {
@@ -374,7 +363,6 @@ const bard = async (query, tabId, bard_conv_id) => {
 
         let preQuery = query
         let { Cval, Rval, RCval } = bard_conv_id
-        // console.log(bard_conv_id)
 
         let encodeData = `f.req=${encodeURIComponent(`[null,"[[\\"${preQuery}\\"],null,[\\"${Cval}\\",\\"${Rval}\\",\\"${RCval}\\"]]"]`)}&at=${encodeURIComponent(`${result.bard_api_key}`)}&`
 
@@ -390,7 +378,6 @@ const bard = async (query, tabId, bard_conv_id) => {
         })
             .then(response => response.text())
             .then(data => {
-                // console.log("initial data", data)
                 let slicingStartPoint = data.indexOf('[["wrb.fr",null,')
                 let slicingEnPoint = data.indexOf('"af.httprm"')
                 let slicedData = data.slice(slicingStartPoint, slicingEnPoint - 17)
