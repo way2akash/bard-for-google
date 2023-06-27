@@ -1,18 +1,18 @@
-console.log("new content js")
 
 let gptquery = ""
 let bardquery = ""
 let bardFirstAns = ""
 let gptFirstAns = ""
 let targetLocation = window.location.hostname
-let selectors = ['.GyAeWb', '#b_context', '#right', '[data-area="sidebar"]', '#content_right', '.content__right']
+let selectors = ['.GyAeWb', '#b_context', '#right', '[data-area="sidebar"]', '#content_right', '.content__right', '.kix-appview-editor-container']
 let bard_conv_id = {
     Cval: "",
     Rval: "",
     RCval: ""
 }
-let gpt_conv_id = null
 let hideChatMode = true
+let gptResponseCopy = false
+let bardMultipleMsg = false
 
 
 // images 
@@ -58,7 +58,7 @@ if (window.location.href === "https://bard.google.com/") {
 
 
 //search page domain list where div will be injected
-if (targetLocation.includes("www.google.") || targetLocation.includes("www.bing.") || targetLocation.includes("search.yahoo.") || targetLocation.includes("duckduckgo.") || targetLocation.includes("www.baidu.") || targetLocation.includes("yandex.")) {
+if (targetLocation.includes("www.google.") || targetLocation.includes("www.bing.") || targetLocation.includes("search.yahoo.") || targetLocation.includes("duckduckgo.") || targetLocation.includes("www.baidu.") || targetLocation.includes("yandex.") || targetLocation.includes("docs.google.")) {
     chrome.storage.local.get(["toggleState"], (result) => {
         if (result.toggleState === "on") {
             waitUntilVideoElementLoads()
@@ -93,6 +93,10 @@ async function waitUntilVideoElementLoads() {
                     baiduIntegration(element)
                 } else if (targetLocation.includes("yandex.")) {
                     yandexIntegration(element)
+                } else if (targetLocation.includes("docs.google.")) {
+
+                    docsintegration(element)
+
                 }
 
                 chrome.storage.local.get(["mode"], (result) => {
@@ -232,12 +236,26 @@ const yandexIntegration = (element) => {
     titleSecCreationFn(parentPanelDiv)
 
 }
+const docsintegration = (element) => {
+    gptquery = "Hi"
+    bardquery = "Hi"
+    let classfetch = document.querySelector(".kix-appview-editor-container")
+    classfetch.style.display = "flex"
+    let canvafetch = document.querySelector(".kix-appview-editor")
+    canvafetch.style.width = "70%"
+    let parentPanelDiv = document.createElement("div")
+    parentPanelDiv.setAttribute("id", "parentPanelDiv")
+    parentPanelDiv.style.margin = "10px"
 
+    element.append(parentPanelDiv)
+    titleSecCreationFn(parentPanelDiv)
+
+}
 
 const titleSecCreationFn = (parentPanelDiv) => {
     //title section 
     let titleSection = document.createElement("div")
-    titleSection.setAttribute("id", "titleSection")
+    titleSection.setAttribute("id", "titleSectionx")
     parentPanelDiv.appendChild(titleSection)
 
     // bard logo
@@ -300,7 +318,6 @@ const titleSecCreationFn = (parentPanelDiv) => {
     mode.addEventListener("click", () => {
 
 
-        console.log("dark ")
         if (modeLogo.src === lightmoon) {
             darkmode()
             chrome.storage.local.set({ mode: "on" })
@@ -350,7 +367,6 @@ const titleSecCreationFn = (parentPanelDiv) => {
 
 
 const loaderCreation = (val) => {
-    console.log(val, "val")
     let loaderDiv = document.createElement("div")
     loaderDiv.setAttribute("id", "loader")
     val.appendChild(loaderDiv)
@@ -381,9 +397,7 @@ const header = (panel) => {
     bardTab.setAttribute("id", "bardTab")
     headerSection.appendChild(bardTab)
 
-    // let bardBorder= document.createElement("bardBorder")
-    // bardBorder.setAttribute("id","bardBorder")
-    // bardTab.appendChild(bardBorder)
+
 
     let bardTabLogo = document.createElement("img")
     bardTabLogo.setAttribute("id", "bardTabLogo")
@@ -445,20 +459,13 @@ const bard_btn_listener = () => {
 
     chrome.storage.local.get(["mode"], (result) => {
         if (result.mode === "on") {
-            bardTab.style.background = "#0D0D0D"
-            gptTab.style.background = "transparent"
-            bardTab.style.color = "#fff"
-            gptTab.style.color = "#fff"
+
+            darkmode()
 
 
 
         } else {
-
-            bardTab.style.background = "#fff"
-            gptTab.style.background = "transparent"
-            bardTab.style.color = "#000"
-            gptTab.style.color = "#000"
-
+            lightmode()
 
 
         }
@@ -513,38 +520,17 @@ const gpt_btn_listener = () => {
         let access = chrome.storage.sync.get("accessToken")
         access.then((e) => {
             if (e.accessToken) {
-                // gpt_access_token_validity = true
-                // gptDone=true
-                gptClientMsg(gptquery)
-                loaderCreation(gpt_section_div)
 
-                let gptResult = document.getElementById("gptResult")
-                let gptResponseDiv = document.createElement("div")
-                gptResponseDiv.setAttribute("class", "gptResponseDiv")
-                gptResult.appendChild(gptResponseDiv)
 
                 if (document.getElementById("gpt_login_box")) {
                     document.getElementById("gpt_login_box").remove()
                 }
                 gptResult.style.display = "flex"
 
-                let copyGptRes = document.createElement("div")
-                copyGptRes.setAttribute("id", "copyGptRes")
-                gptResult.appendChild(copyGptRes)
-                copyGptRes.style.display="none"
-                let gptResCopy = document.createElement("img")
-                gptResCopy.setAttribute("id", "gptResCopy")
-                gptResCopy.src = copyIconDark
-                copyGptRes.appendChild(gptResCopy)
-            
-                gptResCopy.addEventListener("click", () => {
-                    navigator.clipboard.writeText(gptResponseDiv.innerText);
-            
-                })
-
-                chrome.runtime.sendMessage({ message: 'search-occured-gpt', query: gptquery, gpt_conv_id })
 
 
+
+                gptCall()
 
             } else {
                 gpt_section_login(gpt_section_div)
@@ -576,6 +562,7 @@ const bard_section = (panel) => {
                 document.getElementById("bard_login_box").remove()
             }
             bardResult.style.display = "flex"
+            bardMultipleMsg = true
 
             chrome.runtime.sendMessage({ message: 'search-occured-bard', query: bardquery, bard_conv_id })
 
@@ -602,14 +589,13 @@ const gpt_section = (panel) => {
 
 const bardCall = () => {
     let bardResult = document.getElementById("bardResult")
-    console.log("bar", bardResult)
     bardClientMsg(bardquery)
     loaderCreation(bardResult)
     if (document.getElementById("bard_login_box")) {
         document.getElementById("bard_login_box").remove()
     }
     bardResult.style.display = "flex"
-
+    bardMultipleMsg = true
     chrome.runtime.sendMessage({ message: 'search-occured-bard', query: bardquery, bard_conv_id })
 }
 
@@ -620,7 +606,14 @@ const gptCall = () => {
     if (document.getElementById("gpt_login_box")) {
         document.getElementById("gpt_login_box").remove()
     }
-    chrome.runtime.sendMessage({ message: 'search-occured-gpt', query: gptquery, gpt_conv_id })
+    gptResponseCopy = true
+
+    chrome.runtime.sendMessage({ message: 'search-occured-gpt', query: gptquery })
+    // let gptResult = document.getElementById("gptResult")
+    let gptResponseDiv = document.createElement("div")
+    gptResponseDiv.setAttribute("class", "gptResponseDiv")
+    gptResult.appendChild(gptResponseDiv)
+    gptResponseDiv.style.display = "none"
 }
 
 
@@ -806,9 +799,26 @@ const footer_section = (panel) => {
         footer_section_div.style.border = "none"
 
         let bardResponseDiv = document.getElementsByClassName("bardResponseDiv")[0]
-        bardResponseDiv.style.background = "#F4F5FA"
-        bardResponseDiv.style.padding = "10px"
+        let gptResponseDiv = document.getElementsByClassName("gptResponseDiv")[0]
 
+
+        chrome.storage.local.get(["mode"], (result) => {
+            if (result.mode === "on") {
+                darkmode()
+
+            } else {
+                lightmode()
+
+            }
+        })
+        if (bardResponseDiv) {
+            bardResponseDiv.style.padding = "10px"
+
+        }
+        if (gptResponseDiv) {
+            gptResponseDiv.style.padding = "10px"
+
+        }
         // gptResponseDiv.style.background = "#F4F5FA"
 
 
@@ -822,7 +832,6 @@ const footer_section = (panel) => {
 
         ChatMode()
         hideChatMode = false
-        console.log(hideChatMode, "cmode")
 
     })
     let bardClientDiv = document.querySelectorAll(".bardClientDiv")
@@ -856,7 +865,6 @@ const footer_section = (panel) => {
 
 }
 const ChatMode = () => {
-    console.log("chat mode activated")
     let bardClientDiv = document.querySelectorAll(".bardClientDiv")
     let gptClientDiv = document.querySelectorAll(".gptClientDiv")
     let gptResponseDiv = document.querySelectorAll(".gptResponseDiv")
@@ -870,27 +878,14 @@ const ChatMode = () => {
         element.style.display = "flex";
     });
 
-    Array.from(gptResponseDiv).forEach(function (element) {
-        element.style.background = "#F6F8FA"
-    });
-
-    Array.from(bardResponseDiv).forEach(function (element) {
-        element.style.background = "#F6F8FA"
-    });
 
 }
 const followUpFn = () => {
     if (document.getElementById("gpt_section_div").style.display === "flex") {
         gptquery = inputBox.value
 
-        // gpt_btn_listener()
         let gptResult = document.getElementById("gptResult")
-        gptClientMsg(gptquery)
-        loaderCreation(gptResult)
 
-        let gptResponseDiv = document.createElement("div")
-        gptResponseDiv.setAttribute("class", "gptResponseDiv")
-        gptResult.appendChild(gptResponseDiv)
 
         if (document.getElementById("gpt_login_box")) {
             document.getElementById("gpt_login_box").remove()
@@ -898,9 +893,8 @@ const followUpFn = () => {
         gptResult.style.display = "flex"
 
 
-        chrome.runtime.sendMessage({ message: 'search-occured-gpt', query: gptquery, gpt_conv_id })
 
-
+        gptCall()
     } else if (document.getElementById("bard_section_div").style.display === "flex") {
         bardquery = inputBox.value
 
@@ -908,13 +902,13 @@ const followUpFn = () => {
 
         // bard_btn_listener()
         let bardResult = document.getElementById("bardResult")
-        console.log("bar", bardResult)
         bardClientMsg(bardquery)
         loaderCreation(bardResult)
         if (document.getElementById("bard_login_box")) {
             document.getElementById("bard_login_box").remove()
         }
         bardResult.style.display = "flex"
+        bardMultipleMsg = true
 
         chrome.runtime.sendMessage({ message: 'search-occured-bard', query: bardquery, bard_conv_id })
     }
@@ -974,12 +968,10 @@ const copyBtnListener = () => {
 let bardClientMsg = (quer) => {
 
     let bardResult = document.getElementById("bardResult")
-    console.log(bardResult)
     let bardClientDiv = document.createElement("div")
     bardClientDiv.setAttribute("class", "bardClientDiv")
     bardResult.appendChild(bardClientDiv)
     bardClientDiv.innerText = quer
-    // bardResult.scrollTop = bardClientDiv.offsetTop;
 
 
 }
@@ -990,7 +982,6 @@ let gptClientMsg = (quer) => {
     gptClientDiv.setAttribute("class", "gptClientDiv")
     gptResult.appendChild(gptClientDiv)
     gptClientDiv.innerText = quer
-    // gptResult.scrollTop = gptClientDiv.offsetTop;
 
 
 }
@@ -1008,52 +999,19 @@ const ratingRemoval = () => {
 const bardCopySection = (bardResponseDiv) => {
     chrome.storage.local.get(["mode"], (result) => {
         if (result.mode === "on") {
-            let codeTags = document.querySelectorAll("#panel code");
-            let copyDivs = document.querySelectorAll("#copyDiv")
-            let copyBtns = document.querySelectorAll("#copyBtn")
-            let copyPanel = document.querySelectorAll("#copyPanel")
-
-            bardResponseDiv.style.background = "#161B22"
-            codeTags.forEach((codeTag) => {
-                codeTag.style.background = "#161B22";
-                codeTag.style.color = "#fff";
-                // copyDiv.style.color="#E7E8EB"
-            });
-            copyDivs.forEach((copyDiv) => {
-                copyDiv.style.color = "#E7E8EB"
-
-            });
-            copyBtns.forEach((copyBtn) => {
-                copyBtn.src = copyIcon
-            })
-            copyPanel.forEach((cPanel) => {
-                cPanel.style.background = "#1E2336"
-            })
-        } else {
             if (!hideChatMode) {
-
-                bardResponseDiv.style.background = "#F4F5FA"
                 bardResponseDiv.style.padding = "10px"
-
 
             }
 
-            codeTags.forEach((codeTag) => {
-                codeTag.style.background = "#F4F5FA";
-                codeTag.style.color = "#000";
-                // copyDiv.style.color = "#6170AB"
+            darkmode()
+        } else {
+            if (!hideChatMode) {
 
-            });
-            copyDivs.forEach((copyDiv) => {
-                copyDiv.style.color = "#6170AB"
-
-            });
-            copyBtns.forEach((copyBtn) => {
-                copyBtn.src = copyIconDark
-            })
-            copyPanel.forEach((cPanel) => {
-                cPanel.style.background = "#DADDEA"
-            })
+                // bardResponseDiv.style.background = "#F4F5FA"
+                bardResponseDiv.style.padding = "10px"
+            }
+            lightmode()
 
         }
     })
@@ -1067,43 +1025,18 @@ let gptCopySection = (gptResponseDiv) => {
         let copyPanel = document.querySelectorAll("#copyPanel")
 
         if (result.mode === "on") {
-            gptResponseDiv.style.background = "#161B22"
-            codeTags.forEach((codeTag) => {
-                codeTag.style.background = "#161B22";
-                codeTag.style.color = "#fff";
-                // copyDiv.style.color="#E7E8EB"
-
-            });
-
-            copyDivs.forEach((copyDiv) => {
-                copyDiv.style.color = "#E7E8EB"
-
-            });
-            copyBtns.forEach((copyBtn) => {
-                copyBtn.src = copyIcon
-            })
-            copyPanel.forEach((cPanel) => {
-                cPanel.style.background = "#1E2336"
-            })
+            if (!hideChatMode) {
+                gptResponseDiv.style.padding = "10px"
+            }
+  
+            darkmode()
 
         } else {
-            // gptResponseDiv.style.background = "#F4F5FA"
-            codeTags.forEach((codeTag) => {
-                codeTag.style.background = "#F4F5FA";
-                codeTag.style.color = "#000";
-                // copyDiv.style.color="#6170AB"
+            if (!hideChatMode) {
+                gptResponseDiv.style.padding = "10px"
+            }
 
-            });
-            copyDivs.forEach((copyDiv) => {
-                copyDiv.style.color = "#6170AB"
-
-            });
-            copyBtns.forEach((copyBtn) => {
-                copyBtn.src = copyIconDark
-            })
-            copyPanel.forEach((cPanel) => {
-                cPanel.style.background = "#DADDEA"
-            })
+            lightmode()
 
         }
     })
@@ -1136,10 +1069,22 @@ let bardResponseMsg = (quer) => {
     bardResCopy.src = copyIconDark
     copyBardRes.appendChild(bardResCopy)
 
+    chrome.storage.local.get(["mode"], (result) => {
+        if (result.mode === "on") {
+            bardResCopy.src = copyIcon
+
+        } else {
+            bardResCopy.src = copyIconDark
+
+        }
+    })
+
     bardResCopy.addEventListener("click", () => {
         navigator.clipboard.writeText(bardResponseDiv.innerText);
 
     })
+
+
 
 
 }
@@ -1148,27 +1093,56 @@ let gptResponseMsg = (quer) => {
     let gptResponseDivLen = document.getElementsByClassName("gptResponseDiv").length
     let gptResponseDiv = document.getElementsByClassName("gptResponseDiv")[gptResponseDivLen - 1]
     let gptResult = document.getElementById("gptResult")
-    // let copyGptRes = document.querySelectorAll("#copyGptRes")
 
     gptFirstAns = quer
-    // hljs.highlightAll()
-    // console.log(quer, "rspos")
     gptResponseDiv.innerHTML = quer
+    gptResponseDiv.style.display = "flex"
+    gptResponseDiv.style.flexDirection = "column"
     if (targetLocation.includes("www.google.") || targetLocation.includes("www.bing.") || targetLocation.includes("search.yahoo.") || targetLocation.includes("duckduckgo.") || targetLocation.includes("www.baidu.") || targetLocation.includes("yandex.")) {
         hljs.highlightAll()
 
     }
     copyBtnListener()
-    gptCopySection(gptResponseDiv)
     document.getElementById("footer_section_div").style.display = "flex"
     gptResult.scrollTop = gptResponseDiv.offsetTop;
-    // copyGptRes.forEach((e)=>{
-    //     e.style.display="flex"
-    // })
-    let copyGptRes= document.getElementById("copyGptRes")
-    copyGptRes.style="flex"
+
+    if (gptResponseCopy && quer != "") {
+        let copyGptRes = document.createElement("div")
+        copyGptRes.setAttribute("id", "copyGptRes")
+        gptResult.appendChild(copyGptRes)
+        let gptResCopy = document.createElement("img")
+        gptResCopy.setAttribute("id", "gptResCopy")
+        // gptResCopy.src = copyIconDark
+        copyGptRes.appendChild(gptResCopy)
 
 
+
+
+        gptResCopy.addEventListener("click", () => {
+            navigator.clipboard.writeText(gptResponseDiv.innerText);
+
+        })
+        gptResponseCopy = false
+    }
+
+
+    chrome.storage.local.get(["mode"], (result) => {
+        if (result.mode === "on") {
+            // gptResCopy.src = copyIcon
+            if (!hideChatMode) {
+                gptResponseDiv.style.padding = "10px"
+            }
+            darkmode()
+
+        } else {
+            // gptResCopy.src = copyIconDark
+            if (!hideChatMode) {
+                gptResponseDiv.style.padding = "10px"
+            }
+            lightmode()
+
+        }
+    })
 
 
 
@@ -1185,7 +1159,6 @@ chrome.runtime.onMessage.addListener(function (response, sender, sendResponse) {
 
     if (response.message === 'answer') {
 
-
         let gpt_section_div = document.getElementById("gpt_section_div")
         gpt_section_div.style.justifyContent = "flex-start"
         gpt_section_div.style.alignItems = "flex-start"
@@ -1193,22 +1166,12 @@ chrome.runtime.onMessage.addListener(function (response, sender, sendResponse) {
 
 
 
-        let { answer, gptConversationId } = response
-        gpt_conv_id = gptConversationId
-        // console.log(gptConversationId)
+        let { answer } = response
+
 
         const markdown = window.markdownit()
         const html = markdown.render(answer)
         gptResponseMsg(html)
-        // gpt_section_div.innerHTML = html
-        // if (targetLocation.includes("www.google.") || targetLocation.includes("www.bing.") || targetLocation.includes("search.yahoo.") || targetLocation.includes("duckduckgo.") || targetLocation.includes("www.baidu.") || targetLocation.includes("yandex.")) {
-        //     hljs.highlightAll(bard_section_div)
-
-        // }
-        // copyBtnListener()
-
-
-
 
 
     } else if (response.message === "gptErrAnswer") {
@@ -1221,13 +1184,13 @@ chrome.runtime.onMessage.addListener(function (response, sender, sendResponse) {
 
         if (!document.getElementById("gptErrMsg")) {
             let gptErrMsg = document.createElement("div")
-            gpt_section_div.appendChild(gptErrMsg)
+            // gpt_section_div.appendChild(gptErrMsg)
             gptErrMsg.setAttribute("id", "gptErrMsg")
             gptErrMsg.innerHTML = "Something went wrong please reload page or visit  "
 
             let chatGptLink = document.createElement("a")
             chatGptLink.setAttribute("id", "chatGptLink")
-            gpt_section_div.appendChild(chatGptLink)
+            // gpt_section_div.appendChild(chatGptLink)
             chatGptLink.innerText = "chat.openai.com"
             chatGptLink.href = "https://chat.openai.com/chat"
             chatGptLink.target = "_blank"
@@ -1243,52 +1206,42 @@ chrome.runtime.onMessage.addListener(function (response, sender, sendResponse) {
 
     } else if (response.message === "bardAnswer") {
         let bard_section_div = document.getElementById("bard_section_div")
-        console.log("recd")
+        if (bardMultipleMsg) {
+            bard_section_div.style.justifyContent = "flex-start"
+            bard_section_div.style.alignItems = "flex-start"
+            bard_section_div.style.flexDirection = "column"
 
-
-        // bard_section_div.style.display="flex"
-        bard_section_div.style.justifyContent = "flex-start"
-        bard_section_div.style.alignItems = "flex-start"
-        bard_section_div.style.flexDirection = "column"
-
-        let { bardAnswer } = response
-        let final_bard_answer = JSON.parse(bardAnswer)
-        if (final_bard_answer === null) {
-            bard_section_login(bard_section_div)
-            document.getElementById("bard_login_box").style.display = "flex"
-
-        } else {
-            try {
-                // console.log(bardAnswer)
-
-                const markdown = window.markdownit()
-                const html = markdown.render(final_bard_answer[0][0])
-                console.log(final_bard_answer)
-
-                bard_conv_id.Cval = final_bard_answer[1][0] || ""
-                bard_conv_id.Rval = final_bard_answer[1][1] || ""
-                bard_conv_id.RCval = final_bard_answer[4][0][0] || ""
-
-                console.log(bard_conv_id)
-                // bard_section_div.innerHTML = html
-                bardResponseMsg(html)
-
-                // if (targetLocation.includes("www.google.") || targetLocation.includes("www.bing.") || targetLocation.includes("search.yahoo.") || targetLocation.includes("duckduckgo.") || targetLocation.includes("www.baidu.") || targetLocation.includes("yandex.")) {
-                //     hljs.highlightAll(bard_section_div)
-
-                // }
-
-                // copyBtnListener()
-                // bardDone = 1
-
-
-
-            } catch (error) {
-
+            let { bardAnswer } = response
+            let final_bard_answer = JSON.parse(bardAnswer)
+            if (final_bard_answer === null) {
                 bard_section_login(bard_section_div)
+                document.getElementById("bard_login_box").style.display = "flex"
 
+            } else {
+                try {
+                    const markdown = window.markdownit()
+                    const html = markdown.render(final_bard_answer[4][0][1][0])
+
+                    bard_conv_id.Cval = final_bard_answer[1][0] || ""
+                    bard_conv_id.Rval = final_bard_answer[1][1] || ""
+                    bard_conv_id.RCval = final_bard_answer[4][0][0] || ""
+
+                    bardResponseMsg(html)
+
+
+                } catch (error) {
+
+                    bard_section_login(bard_section_div)
+
+                }
             }
+
+            bardMultipleMsg = false
+
         }
+
+
+
 
 
 
@@ -1336,6 +1289,7 @@ const darkmode = () => {
     let headerSection = document.getElementById("headerSection")
     let bardResponseDiv = document.getElementsByClassName("bardResponseDiv")
     let gptResponseDiv = document.getElementsByClassName("gptResponseDiv")
+    // let gptResCopy = document.getElementById("gptResCopy")
 
 
     let bardTab = document.getElementById("bardTab")
@@ -1358,15 +1312,52 @@ const darkmode = () => {
     // gptTab.style.color = "#fff"
     headerSection.style.background = "#2A2A2A"
 
+    if (document.getElementsByClassName("bardResponseDiv")) {
+        let bardResponseDiv = document.getElementsByClassName("bardResponseDiv")
+        let bardResCopy = document.querySelectorAll("#bardResCopy")
+        if (hideChatMode && bardResponseDiv.length == 1) {
+            bardResponseDiv[0].style.background = "none"
+
+        } else {
+            for (let i = 0; i < bardResponseDiv.length; i++) {
+                bardResponseDiv[i].style.background = "#161B22";
+                bardResponseDiv[i].style.color = "#fff"
+
+                bardResCopy.forEach((e) => {
+                    e.src = copyIcon
+                })
+            }
+            // bardResCopy.forEach((e) => {
+            //     e.src = copyIcon
+            // })
+        }
 
 
 
-    for (let i = 0; i < bardResponseDiv.length; i++) {
-        bardResponseDiv[i].style.background = "#161B22";
     }
 
-    for (let i = 0; i < gptResponseDiv.length; i++) {
-        gptResponseDiv[i].style.background = "#161B22";
+    if (document.getElementsByClassName("gptResponseDiv")) {
+        let gptResponseDiv = document.getElementsByClassName("gptResponseDiv")
+        let gptResCopy = document.querySelectorAll("#gptResCopy")
+        if (hideChatMode && gptResponseDiv.length == 1) {
+            gptResponseDiv[0].style.background = "none"
+            gptResCopy[0].src=copyIcon
+
+
+        } else {
+            for (let i = 0; i < gptResponseDiv.length; i++) {
+                gptResponseDiv[i].style.background = "#161B22";
+                gptResponseDiv[i].style.color = "#fff"
+                gptResCopy.forEach((e) => {
+                    e.src = copyIcon
+                })
+            }
+            // gptResCopy.forEach((e) => {
+            //     e.src = copyIcon
+            // })
+        }
+
+
     }
 
 
@@ -1393,24 +1384,36 @@ const darkmode = () => {
 
     }
 
-    codeTags.forEach((codeTag) => {
-        codeTag.style.background = "#161B22";
-        codeTag.style.color = "#fff";
-        // copyDiv.style.color="#E7E8EB"
+    if (codeTags) {
+        codeTags.forEach((codeTag) => {
+            codeTag.style.background = "#161B22";
+            codeTag.style.color = "#fff";
 
-    });
+        });
+    }
 
-    copyDivs.forEach((copyDiv) => {
-        copyDiv.style.color = "#E7E8EB"
 
-    });
-    copyBtns.forEach((copyBtn) => {
-        copyBtn.src = copyIcon
-    })
-    copyPanel.forEach((copyPane) => {
-        copyPane.style.background = "#1E2336";
-    })
+    if (copyDivs) {
+        copyDivs.forEach((copyDiv) => {
+            copyDiv.style.color = "#E7E8EB"
+
+        });
+    }
+
+    if (copyBtns) {
+        copyBtns.forEach((copyBtn) => {
+            copyBtn.src = copyIcon
+        })
+    }
+
+
+    if (copyPanel) {
+        copyPanel.forEach((copyPane) => {
+            copyPane.style.background = "#1E2336";
+        })
+    }
 }
+
 
 const lightmode = () => {
     let parentPanelDiv = document.getElementById("parentPanelDiv")
@@ -1429,6 +1432,7 @@ const lightmode = () => {
     let copyDivs = document.querySelectorAll("#copyDiv")
     let copyBtns = document.querySelectorAll("#copyBtn")
     let copyPanel = document.querySelectorAll("#copyPanel")
+    // let gptResCopy = document.getElementById("gptResCopy")
 
     modeLogo.src = lightmoon
     parentPanelDiv.style.background = "#ffffff"
@@ -1449,22 +1453,63 @@ const lightmode = () => {
         loginTextDiv2.style.color = "#000"
     }
 
-    // if (bardResponseDiv) {
-    //     bardResponseDiv.style.background = "#F4F5FA"
 
-    // }
-    // if (gptResponseDiv) {
-    //     gptResponseDiv.style.background = "#F4F5FA"
 
-    // }
+    if (document.getElementsByClassName("bardResponseDiv")) {
+        let bardResponseDiv = document.getElementsByClassName("bardResponseDiv")
+        let bardResCopy = document.querySelectorAll("#bardResCopy")
 
-    for (let i = 0; i < bardResponseDiv.length; i++) {
-        bardResponseDiv[i].style.background = "#F4F5FA";
+        if (hideChatMode && bardResponseDiv.length == 1) {
+            bardResponseDiv[0].style.background = "none"
+
+        } else {
+
+            for (let i = 0; i < bardResponseDiv.length; i++) {
+                bardResponseDiv[i].style.background = "#F4F5FA";
+                bardResponseDiv[i].style.color = "#000"
+                bardResCopy.forEach((e) => {
+                    e.src = copyIconDark
+                })
+            }
+            bardResCopy.forEach((e) => {
+                e.src = copyIconDark
+            })
+        }
+
+
     }
 
-    for (let i = 0; i < gptResponseDiv.length; i++) {
-        gptResponseDiv[i].style.background = "#F4F5FA";
+    if (document.getElementsByClassName("gptResponseDiv")) {
+        let gptResponseDiv = document.getElementsByClassName("gptResponseDiv")
+        let gptResCopy = document.querySelectorAll("#gptResCopy")
+
+        if (hideChatMode && gptResponseDiv.length == 1) {
+
+            gptResponseDiv[0].style.background = "none"
+            gptResCopy[0].src=copyIconDark
+
+
+        } else {
+
+            for (let i = 0; i < gptResponseDiv.length; i++) {
+                gptResponseDiv[i].style.background = "#F4F5FA";
+                gptResponseDiv[i].style.color = "#000"
+
+                gptResCopy.forEach((e) => {
+                    e.src = copyIconDark
+                })
+            }
+            gptResCopy.forEach((e) => {
+                e.src = copyIconDark
+            })
+        }
+
+
+
     }
+
+
+
 
     if (bard_section_div.style.display === "flex") {
         bardTab.style.background = "#fff"
@@ -1481,24 +1526,35 @@ const lightmode = () => {
         gptTab.style.color = "#000"
 
     }
+    if (codeTags) {
+        codeTags.forEach((codeTag) => {
+            codeTag.style.background = "#F4F5FA";
+            codeTag.style.color = "#000";
+            // copyDiv.style.color="#6170AB"
 
-    codeTags.forEach((codeTag) => {
-        codeTag.style.background = "#F4F5FA";
-        codeTag.style.color = "#000";
-        // copyDiv.style.color="#6170AB"
+        });
+    }
 
-    });
-    copyDivs.forEach((copyDiv) => {
-        copyDiv.style.color = "#6170AB"
+    if (copyDivs) {
+        copyDivs.forEach((copyDiv) => {
+            copyDiv.style.color = "#6170AB"
 
-    });
-    copyBtns.forEach((copyBtn) => {
-        copyBtn.src = copyIconDark
-    })
+        });
+    }
 
-    copyPanel.forEach((copyPane) => {
-        copyPane.style.background = "#DADDEA";
-    })
+
+    if (copyBtns) {
+        copyBtns.forEach((copyBtn) => {
+            copyBtn.src = copyIconDark
+        })
+    }
+
+    if (copyPanel) {
+        copyPanel.forEach((copyPane) => {
+            copyPane.style.background = "#DADDEA";
+        })
+    }
+
 
 
 

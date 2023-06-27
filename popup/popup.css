@@ -52,7 +52,9 @@
     width: 14px;
 }
 
-
+#copy{
+    display: none;
+}
 #panel {
     width: 100%;
     color: #000;
@@ -237,14 +239,24 @@
     box-sizing: content-box;
 }
 
+
+
 #panel ul {
     width: 100%;
+    font-family: "Inter", sans-serif;
+
     /* padding: 0px 5px; */
 }
 
 #panel ol {
     width: 100%;
-    padding: 0px 5px;
+    /* padding: 0px 5px; */
+    font-family: "Inter", sans-serif;
+
+
+}
+#panel li{
+    font-family: "Inter", sans-serif;
 
 }
 
@@ -465,7 +477,23 @@
     font-size: 11px;
     font-weight: 600;
 }
-
+#copyBardRes, #copyGptRes{
+    /* position: absolute; */
+    width: 20px;
+    height: 20px;
+    bottom: -30px;
+    /* background-color: #fff; */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    margin-bottom: 10px;
+    border-radius: 3px;
+}
+#copyBardRes img, #copyGptRes img{
+    height: 15px;
+    width: 15px;
+}
 /* custom scroll bar */
 #bard_section_div::-webkit-scrollbar,
 #gpt_section_div::-webkit-scrollbar {

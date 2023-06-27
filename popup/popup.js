@@ -24,8 +24,8 @@ let codeTags = document.querySelectorAll("#panel code");
 let copyDivs = document.querySelectorAll("#copyDiv")
 let copyBtns = document.querySelectorAll("#copyBtn")
 let copyPanel = document.querySelectorAll("#copyPanel")
-let bardResponseDiv = document.getElementsByClassName("bardResponseDiv")
-let gptResponseDiv = document.getElementsByClassName("gptResponseDiv")
+// let bardResponseDiv = document.getElementsByClassName("bardResponseDiv")
+// let gptResponseDiv = document.getElementsByClassName("gptResponseDiv")
 let titleRating = document.getElementById("titleRating")
 
 let ratingStorage = chrome.storage.local.get(["rated"])
@@ -38,9 +38,12 @@ let bard_conv_id = {
     Rval: "",
     RCval: ""
 }
+let gptResponseCopy = false
+let gptResponse
+let bardMultipleMsg= false
+
 
 window.onload = function () {
-    console.log(bardResult)
 
     inputBox.focus()
     let bard_access_token = chrome.storage.local.get(["bard_api_key"])
@@ -83,19 +86,18 @@ window.onload = function () {
 
     ratingStorage.then((e) => {
         if (e.rated) {
-           titleRating.style.display = "none"
+            titleRating.style.display = "none"
         }
 
     })
 
 }
 
-titleRating.addEventListener(("click"), ()=>{
+titleRating.addEventListener(("click"), () => {
     chrome.storage.local.set({ rated: true })
 
 })
 mode.addEventListener("click", () => {
-    console.log("hii")
     if (modeLogo.src.match("lightmoon")) {
         darkmode()
         chrome.storage.local.set({ mode: "on" })
@@ -135,13 +137,44 @@ const darkmode = () => {
     let copyBtns = document.querySelectorAll("#copyBtn")
     let copyPanel = document.querySelectorAll("#copyPanel")
 
-    for (let i = 0; i < bardResponseDiv.length; i++) {
-        bardResponseDiv[i].style.background = "#161B22";
+    if(document.getElementsByClassName("bardResponseDiv")){
+        let bardResponseDiv= document.getElementsByClassName("bardResponseDiv")
+        let bardResCopy= document.querySelectorAll("#bardResCopy")
+
+
+        for (let i = 0; i < bardResponseDiv.length; i++) {
+            if(!hideChatMode){
+                bardResponseDiv[i].style.background = "#161B22";
+            }else{
+                bardResponseDiv[i].style.background = "none";
+
+            }
+        }
+        bardResCopy.forEach((e)=>{
+            e.src= "../static/images/copyIcon.svg"
+        })
     }
 
-    for (let i = 0; i < gptResponseDiv.length; i++) {
-        gptResponseDiv[i].style.background = "#161B22";
+    if(document.getElementsByClassName("gptResponseDiv")){
+        let gptResponseDiv= document.getElementsByClassName("gptResponseDiv")
+        let gptResCopy= document.querySelectorAll("#gptResCopy")
+
+        for (let i = 0; i < gptResponseDiv.length; i++) {
+            if(!hideChatMode){
+                gptResponseDiv[i].style.background = "#161B22";
+
+            }else{
+                gptResponseDiv[i].style.background = "none";
+
+            }
+        }
+        gptResCopy.forEach((e)=>{
+            e.src= "../static/images/copyIcon.svg"
+        })
     }
+
+
+
 
     loginText.forEach((e) => {
         e.style.color = "#fff"
@@ -164,7 +197,6 @@ const darkmode = () => {
     }
 
     codeTags.forEach((codeTag) => {
-        console.log("codetags")
         codeTag.style.background = "#161B22";
         codeTag.style.color = "#fff";
         // copyDiv.style.color="#E7E8EB"
@@ -172,18 +204,14 @@ const darkmode = () => {
     });
 
     copyDivs.forEach((copyDiv) => {
-        console.log("codetDiv")
         copyDiv.style.color = "#E7E8EB"
 
     });
     copyBtns.forEach((copyBtn) => {
-        console.log("codetbtn")
 
-        copyBtn.src =  "../static/images/copyIcon.svg"
+        copyBtn.src = "../static/images/copyIcon.svg"
     })
     copyPanel.forEach((copyPane) => {
-        console.log("codepane")
-
         copyPane.style.background = "#1E2336";
     })
 
@@ -207,13 +235,44 @@ const lightmode = () => {
     let copyBtns = document.querySelectorAll("#copyBtn")
     let copyPanel = document.querySelectorAll("#copyPanel")
 
-    for (let i = 0; i < bardResponseDiv.length; i++) {
-        bardResponseDiv[i].style.background = "#F4F5FA";
+    if(document.getElementsByClassName("bardResponseDiv")){
+        let bardResponseDiv= document.getElementsByClassName("bardResponseDiv")
+        let bardResCopy= document.querySelectorAll("#bardResCopy")
+
+
+        for (let i = 0; i < bardResponseDiv.length; i++) {
+            if(!hideChatMode){
+                bardResponseDiv[i].style.background = "#F4F5FA";
+            }else{
+                bardResponseDiv[i].style.background = "none";
+
+            }
+        }
+        bardResCopy.forEach((e)=>{
+            e.src= "../static/images/copyIconDark.svg"
+        })
+
     }
 
-    for (let i = 0; i < gptResponseDiv.length; i++) {
-        gptResponseDiv[i].style.background = "#F4F5FA";
+    if(document.getElementsByClassName("gptResponseDiv")){
+        let gptResponseDiv= document.getElementsByClassName("gptResponseDiv")
+        let gptResCopy= document.querySelectorAll("#gptResCopy")
+
+        for (let i = 0; i < gptResponseDiv.length; i++) {
+            if(!hideChatMode){
+                gptResponseDiv[i].style.background = "#F4F5FA";
+
+            }else{
+                gptResponseDiv[i].style.background = "none";
+
+            }
+        }
+        gptResCopy.forEach((e)=>{
+            e.src= "../static/images/copyIconDark.svg"
+        })
+
     }
+
 
 
     loginText.forEach((e) => {
@@ -247,7 +306,7 @@ const lightmode = () => {
 
     });
     copyBtns.forEach((copyBtn) => {
-        copyBtn.src =  "../static/images/copyIconDark.svg"
+        copyBtn.src = "../static/images/copyIconDark.svg"
     })
 
     copyPanel.forEach((copyPane) => {
@@ -256,7 +315,6 @@ const lightmode = () => {
 
 }
 bardTab.addEventListener("click", () => {
-    console.log("bardtab")
 
     bardTab.style.background = "#fffff"
     bardTab.style.borderLeft = "3.5px solid #b5adad"
@@ -307,7 +365,6 @@ bardTab.addEventListener("click", () => {
 
 
 gptTab.addEventListener("click", () => {
-    console.log("gpttab")
 
     gptTab.style.background = "#fffff"
     gptTab.style.borderLeft = "3.5px solid #b5adad"
@@ -358,7 +415,7 @@ chatTextDiv.addEventListener("click", () => {
     rateChatDiv.style.display = "none"
     followUpDiv.style.display = "flex"
     document.getElementById("copy").style.display = "none"
-    
+
     footer_section_div.style.border = "none"
 
     ratingStorage.then((e) => {
@@ -367,7 +424,7 @@ chatTextDiv.addEventListener("click", () => {
         }
 
     })
-    
+
 })
 
 
@@ -435,6 +492,8 @@ let bard_btn_listener = (quer) => {
 
     bardClientMsg(bardquery)
     bardResult.appendChild(bardLoader);
+    bardMultipleMsg=true
+
 
     chrome.runtime.sendMessage({ message: "popup-bard-searched", query: bardquery, bard_conv_id })
 }
@@ -447,13 +506,13 @@ let gpt_btn_listener = () => {
 
     gptClientMsg(gptquery)
     gptResult.appendChild(gptLoader);
-    console.log(query)
 
     // let gptResult = document.getElementById("gpt-result")
     let gptResponseDiv = document.createElement("div")
     gptResponseDiv.setAttribute("class", "gptResponseDiv")
     gptResult.appendChild(gptResponseDiv)
-
+    gptResponseCopy = true
+    gptResponseDiv.style.display="none"
 
     chrome.runtime.sendMessage({ message: "popup-gpt-searched", query: gptquery })
 
@@ -500,8 +559,6 @@ const copyBtnListener = () => {
 
 let bardClientMsg = (quer) => {
 
-    // let bardResult= document.getElementById("bardResult")
-    console.log(bardResult)
     let bardClientDiv = document.createElement("div")
     bardClientDiv.setAttribute("class", "bardClientDiv")
     bardResult.appendChild(bardClientDiv)
@@ -510,7 +567,6 @@ let bardClientMsg = (quer) => {
 }
 
 let gptClientMsg = (quer) => {
-    // let gptResult= document.getElementById("gptResult")
     let gptClientDiv = document.createElement("div")
     gptClientDiv.setAttribute("class", "gptClientDiv")
     gptResult.appendChild(gptClientDiv)
@@ -524,9 +580,7 @@ const bardCopySection = (bardResponseDiv) => {
             let copyDivs = document.querySelectorAll("#copyDiv")
             let copyBtns = document.querySelectorAll("#copyBtn")
             let copyPanel = document.querySelectorAll("#copyPanel")
-            // console.log(cPanel[0])
 
-            // console.log("bardcopy sect",copyDivs[0], copyBtns[0], copyPanel[0], codeTags[0] )
 
             bardResponseDiv.style.background = "#161B22"
 
@@ -575,7 +629,6 @@ let gptCopySection = (gptResponseDiv) => {
         let copyBtns = document.querySelectorAll("#copyBtn")
         let copyPanel = document.querySelectorAll("#copyPanel")
 
-        console.log("gptcopy sect")
 
         if (result.mode === "on") {
             gptResponseDiv.style.background = "#161B22"
@@ -625,6 +678,32 @@ let bardResponseMsg = (quer) => {
     hljs.highlightAll()
     copyBtnListener()
     bardCopySection(bardResponseDiv)
+    bardResult.scrollTop = bardResponseDiv.offsetTop;
+
+
+    let copyBardRes = document.createElement("div")
+    copyBardRes.setAttribute("id", "copyBardRes")
+    bardResult.appendChild(copyBardRes)
+    let bardResCopy = document.createElement("img")
+    bardResCopy.setAttribute("id", "bardResCopy")
+
+    chrome.storage.local.get(["mode"], (result) => {
+        if (result.mode === "on") {
+            bardResCopy.src = "../static/images/copyIcon.svg"
+
+        }else{
+            bardResCopy.src = "../static/images/copyIconDark.svg"
+
+        }
+    })
+
+    copyBardRes.appendChild(bardResCopy)
+
+    bardResCopy.addEventListener("click", () => {
+        navigator.clipboard.writeText(bardResponseDiv.innerText);
+
+    })
+
 
 }
 
@@ -633,52 +712,82 @@ let gptResponseMsg = (quer) => {
     let gptResponseDivLen = document.getElementsByClassName("gptResponseDiv").length
     let gptResponseDiv = document.getElementsByClassName("gptResponseDiv")[gptResponseDivLen - 1]
 
-    // let gptResponseDiv = document.createElement("div")
-    // gptResponseDiv.setAttribute("class", "gptResponseDiv")
-    // bardResult.appendChild(gptResponseDiv)
-    console.log(quer)
+
+
+
     gptResponseDiv.innerHTML = quer
+    gptResponseDiv.style.display="flex"
     hljs.highlightAll()
     copyBtnListener()
     gptCopySection(gptResponseDiv)
+    gptResult.scrollTop = gptResponseDiv.offsetTop;
 
-    console.log(quer, "rspos")
+
+    if (gptResponseCopy && quer != "") {
+
+        let copyGptRes = document.createElement("div")
+        copyGptRes.setAttribute("id", "copyGptRes")
+        gptResult.appendChild(copyGptRes)
+        // copyGptRes.style.display = "none"
+        let gptResCopy = document.createElement("img")
+        gptResCopy.setAttribute("id", "gptResCopy")
+        gptResCopy.src = "../static/images/copyIconDark.svg"
+        chrome.storage.local.get(["mode"], (result) => {
+            if (result.mode === "on") {
+                gptResCopy.src = "../static/images/copyIcon.svg"
+    
+            }else{
+                gptResCopy.src = "../static/images/copyIconDark.svg"
+    
+            }
+        })
+        copyGptRes.appendChild(gptResCopy)
+
+        gptResCopy.addEventListener("click", () => {
+            navigator.clipboard.writeText(gptResponseDiv.innerText);
+
+        })
+        gptResponseCopy = false
+    }
+
 }
 
 
 
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
     let { message } = request
-    // console.log(message)
     if (message === "bardAnswer") {
         bardLoader.style.display = "none"
 
         let { bardAnswer } = request
-
-        let final_bard_answer = JSON.parse(bardAnswer)
-        if (final_bard_answer === null) {
-            bard_login.style.display = "flex"
-        } else {
-            try {
-                bardResult.style.display = "flex"
-                const markdown = window.markdownit()
-                const html = markdown.render(final_bard_answer[0][0])
-
-                bard_conv_id.Cval = final_bard_answer[1][0] || ""
-                bard_conv_id.Rval = final_bard_answer[1][1] || ""
-                bard_conv_id.RCval = final_bard_answer[4][0][0] || ""
-                // bardResult.innerHTML = html
-                // hljs.highlightAll()
-                // copyBtnListener()
-                bardResponseMsg(html)
-
-                // chrome.storage.local.set({ bardResultStorage: html })
-
-            } catch (error) {
+        if(bardMultipleMsg){
+            let final_bard_answer = JSON.parse(bardAnswer)
+            if (final_bard_answer === null) {
                 bard_login.style.display = "flex"
-
+            } else {
+                try {
+                    bardResult.style.display = "flex"
+                    const markdown = window.markdownit()
+                    const html = markdown.render(final_bard_answer[4][0][1][0])
+    
+                    bard_conv_id.Cval = final_bard_answer[1][0] || ""
+                    bard_conv_id.Rval = final_bard_answer[1][1] || ""
+                    bard_conv_id.RCval = final_bard_answer[4][0][0] || ""
+     
+                    bardResponseMsg(html)
+    
+    
+                } catch (error) {
+                    bard_login.style.display = "flex"
+    
+                }
             }
+            bardMultipleMsg=false
+
+
         }
+
+
 
     } else if (message === "bardNotAvailable") {
         bardResult.style.display = "none"
@@ -694,16 +803,10 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
         let { answer } = request
         const markdown = window.markdownit()
         const html = markdown.render(answer)
-        // console.log(html)
         gptResponseMsg(html)
-        // gptResult.innerHTML = html
-        // hljs.highlightAll()
-        // copyBtnListener()
 
-        // chrome.storage.local.set({ gptResultStorage: html })
 
     } else if (message === "gptErrAnswer") {
-        console.log("gpt error popup")
         gptResult.style.display = "none"
         gptLoader.style.display = "none"
         gpt_login.style.display = "flex"

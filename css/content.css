@@ -2,11 +2,13 @@
     font-family: "Roboto";
     src: url("chrome-extension://__MSG_@@extension_id__/static/font/Roboto-Regular.ttf");
 }
+
 @font-face {
     font-family: "Inter";
     src: url("chrome-extension://__MSG_@@extension_id__/static/font/Inter-Regular.ttf");
 
 }
+
 /* Inter-Regular.ttf */
 
 #parentPanelDiv {
@@ -26,7 +28,7 @@
 }
 
 
-#titleSection {
+#parentPanelDiv #titleSectionx {
     width: 100%;
     height: 30px;
     display: flex;
@@ -35,7 +37,7 @@
 }
 
 
-#titleOptionDiv {
+#parentPanelDiv #titleOptionDiv {
     height: 100%;
 
     display: flex;
@@ -43,8 +45,8 @@
     flex-direction: row;
 }
 
-#mode,
-#copy {
+#parentPanelDiv #mode,
+#parentPanelDiv #copy {
     height: 30px;
     width: 30px;
     background-color: #7789D2;
@@ -55,14 +57,14 @@
     cursor: pointer;
 }
 
-#mode img,
-#copy img {
+#parentPanelDiv #mode img,
+#parentPanelDiv #copy img {
     height: 14px;
     width: 14px;
 }
 
 
-#panel {
+#parentPanelDiv #panel {
     width: 100%;
     color: #000;
     /* background-color: red; */
@@ -71,14 +73,14 @@
 }
 
 
-.loader {
+#parentPanelDiv .loader {
     display: flex;
     align-items: center;
     justify-content: center;
     /* height: 100vh; */
 }
 
-.dot {
+#parentPanelDiv .dot {
     display: inline-block;
     width: 6px;
     height: 6px;
@@ -88,11 +90,11 @@
     animation: dot-animation 1s infinite;
 }
 
-.dot:nth-child(2) {
+#parentPanelDiv .dot:nth-child(2) {
     animation-delay: 0.2s;
 }
 
-.dot:nth-child(3) {
+#parentPanelDiv .dot:nth-child(3) {
     animation-delay: 0.4s;
 }
 
@@ -109,7 +111,7 @@
     }
 }
 
-#headerSection {
+#parentPanelDiv #headerSection {
     width: 100%;
     height: 50px;
     display: flex;
@@ -124,8 +126,8 @@
 
 }
 
-#bardTab,
-#gptTab {
+#parentPanelDiv #bardTab,
+#parentPanelDiv #gptTab {
     width: 151px;
     height: 36px;
     cursor: pointer;
@@ -144,7 +146,7 @@
     user-select: none;
 }
 
-#bardTab {
+#parentPanelDiv #bardTab {
     background: #FFFFFF;
     box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.14);
     border-left: 3.5px solid;
@@ -158,7 +160,7 @@
 
 }
 
-#gptTab {
+#parentPanelDiv #gptTab {
     background: transparent;
     opacity: 0.4;
     /* border-left: 3.5px solid; */
@@ -169,7 +171,7 @@
 
 
 
-#bard_section_div {
+#parentPanelDiv #bard_section_div {
     box-sizing: border-box;
     width: 100%;
     align-items: flex-start;
@@ -187,8 +189,8 @@
     flex-direction: column;
 }
 
-#bardResult,
-#gptResult {
+#parentPanelDiv #bardResult,
+#parentPanelDiv #gptResult {
     display: flex;
     flex-direction: column;
     width: 100%;
@@ -198,8 +200,8 @@
     /* background-color: #fff; */
 }
 
-.bardClientDiv,
-.gptClientDiv {
+#parentPanelDiv .bardClientDiv,
+#parentPanelDiv .gptClientDiv {
     background: #4662D2;
     color: #FFFFFF;
     padding: 5px;
@@ -215,8 +217,8 @@
     line-height: 20px;
 }
 
-.gptResponseDiv,
-.bardResponseDiv {
+#parentPanelDiv .gptResponseDiv,
+#parentPanelDiv .bardResponseDiv {
     /* background: #F6F8FA; */
     /* padding: 5px; */
     width: fit-content;
@@ -233,21 +235,29 @@
     /* padding-bottom: 30px; */
     /* margin-bottom: 30px; */
     line-height: 20px;
-    background: #fff;
+    /* background: #fff; */
 
 }
-.bardResponseDiv > * ~ *, .gptResponseDiv > * ~ *{
+
+#parentPanelDiv .bardResponseDiv>*~*,
+#parentPanelDiv .gptResponseDiv>*~* {
     margin-bottom: 5px;
 }
 
-.gptResponseDiv table,.bardResponseDiv table {
+#panel .gptResponseDiv table,
+#panel .bardResponseDiv table {
     border-collapse: collapse;
-  }
-  
-  .gptResponseDiv table, th, td, .bardResponseDiv table, th, td{
+}
+
+#panel .gptResponseDiv table th,
+#panel .gptResponseDiv table td,
+#panel .bardResponseDiv table th,
+#panel .bardResponseDiv table td {
     border: 1px solid rgba(96, 96, 96, 0.695);
-  }
-#copyBardRes, #copyGptRes{
+}
+
+#parentPanelDiv #copyBardRes,
+#parentPanelDiv #copyGptRes {
     /* position: absolute; */
     width: 20px;
     height: 20px;
@@ -259,20 +269,22 @@
     cursor: pointer;
     margin-bottom: 10px;
 }
-#copyBardRes img, #copyGptRes img{
+
+#parentPanelDiv #copyBardRes img,
+#parentPanelDiv #copyGptRes img {
     height: 15px;
     width: 15px;
 }
 
-#bardResult p,
-#bardResult span,
-#gptResult p,
-#gptResult span {
-  /* color: #000; */
-  font-size: 12px;
+#parentPanelDiv #bardResult p,
+#parentPanelDiv #bardResult span,
+#parentPanelDiv #gptResult p,
+#parentPanelDiv #gptResult span {
+    /* color: #000; */
+    font-size: 12px;
 }
 
-#gpt_section_div {
+#parentPanelDiv #gpt_section_div {
     box-sizing: border-box;
     width: 100%;
     align-items: flex-start;
@@ -291,14 +303,14 @@
 }
 
 
-#panel pre {
+#parentPanelDiv #panel pre {
     width: 100%;
     overflow: unset !important;
     position: relative;
     padding: 0px;
 }
 
-#panel code {
+#parentPanelDiv #panel code {
     display: block;
     /* background: #F4F5FA; */
     padding: 10px;
@@ -307,7 +319,7 @@
     /* color: #000; */
 }
 
-#panel #copyPanel {
+#parentPanelDiv #panel #copyPanel {
     user-select: none;
     width: 100%;
     height: 30px;
@@ -320,7 +332,7 @@
     border-radius: 6px 6px 0px 0px;
 }
 
-#panel #copyDiv {
+#parentPanelDiv #panel #copyDiv {
     width: 125px;
     height: 26px;
     display: flex;
@@ -332,7 +344,7 @@
     /* color: #6170AB; */
 }
 
-#panel #copyBtn {
+#parentPanelDiv #panel #copyBtn {
     cursor: pointer;
     height: 12px;
     padding: 5px;
@@ -340,26 +352,27 @@
     box-sizing: content-box;
 }
 
-#panel ul {
+#parentPanelDiv #panel ul {
     width: 100%;
     font-family: "Inter", sans-serif;
 
     /* padding: 0px 5px; */
 }
 
-#panel ol {
+#parentPanelDiv #panel ol {
     width: 100%;
     /* padding: 0px 5px; */
     font-family: "Inter", sans-serif;
 
 
 }
-#panel li{
+
+#parentPanelDiv #panel li {
     font-family: "Inter", sans-serif;
 
 }
 
-#footer_section_div {
+#parentPanelDiv #footer_section_div {
     height: 70px;
     width: 372px;
     margin: 0px 0px 0px -21px;
@@ -371,7 +384,7 @@
     display: none;
 }
 
-#rateChatDiv {
+#parentPanelDiv #rateChatDiv {
     width: 100%;
     height: 100%;
     display: flex;
@@ -383,7 +396,7 @@
 
 
 
-#chatTextDiv {
+#parentPanelDiv #chatTextDiv {
     box-sizing: border-box;
 
     width: 125px;
@@ -404,7 +417,7 @@
 }
 
 
-#rateDiv {
+#parentPanelDiv #rateDiv {
     height: 30px;
     width: fit-content;
     margin-left: 20px;
@@ -419,7 +432,7 @@
     cursor: pointer;
 }
 
-#titleRating {
+#parentPanelDiv #titleRating {
     /* display: none; */
     height: 30px;
     width: fit-content;
@@ -441,7 +454,7 @@
 }
 
 
-#followUpDiv {
+#parentPanelDiv #followUpDiv {
     width: 100%;
     height: 100%;
     /* display: flex; */
@@ -452,7 +465,7 @@
     display: none;
 }
 
-#inputBox {
+#parentPanelDiv #inputBox {
     width: 100%;
     height: 40px;
     background: #FFFFFF;
@@ -466,31 +479,28 @@
 
 }
 
-#followUpDiv input:focus-visible {
+#parentPanelDiv #followUpDiv input:focus-visible {
     outline: none;
 }
 
-#enterImg {
+#parentPanelDiv #enterImg {
     position: absolute;
     right: 10px;
     cursor: pointer;
 }
 
 
-#gpt_login_box {
+#parentPanelDiv #gpt_login_box {
     width: 99%;
     min-height: 150px;
     display: flex;
     align-items: center;
     flex-direction: column;
     justify-content: center;
-    border-width: 0px 1px 1px 1px;
-    border-style: solid;
-    border-color: #e0e0e0;
-    border-radius: 4px;
+
 }
 
-#bard_login_box {
+#parentPanelDiv #bard_login_box {
     position: relative;
     width: 99%;
     min-height: 150px;
@@ -498,19 +508,16 @@
     align-items: center;
     flex-direction: column;
     justify-content: center;
-    border-width: 0px 1px 1px 1px;
-    border-style: solid;
-    border-color: #e0e0e0;
-    border-radius: 4px;
+
 }
 
-#infoDiv {
+#parentPanelDiv #infoDiv {
     width: 20px;
     height: 20px;
     margin-bottom: 13px;
 }
 
-#warnInfoText {
+#parentPanelDiv #warnInfoText {
     font-family: "Roboto", sans-serif;
     font-style: normal;
     font-weight: 600;
@@ -519,7 +526,7 @@
     color: #f56969 !important;
 }
 
-#loginTextDiv1 {
+#parentPanelDiv #loginTextDiv1 {
     font-size: 13px;
     font-style: normal;
     font-weight: 400;
@@ -528,7 +535,7 @@
     margin-top: 8px;
 }
 
-#chatGptLink {
+#parentPanelDiv #chatGptLink {
     font-style: normal;
     font-weight: 400;
     line-height: 17px;
@@ -536,7 +543,7 @@
     cursor: pointer;
 }
 
-#bard_warn_text {
+#parentPanelDiv #bard_warn_text {
     position: absolute;
     width: 100%;
     display: flex;
@@ -550,135 +557,135 @@
 
 
 /* custom scroll bar */
-#bardResult::-webkit-scrollbar,
-#gptResult::-webkit-scrollbar {
-  width: 5px;
-  position: absolute;
-  left: 10px;
+#parentPanelDiv #bardResult::-webkit-scrollbar,
+#parentPanelDiv #gptResult::-webkit-scrollbar {
+    width: 5px;
+    position: absolute;
+    left: 10px;
 }
 
-#bardResult::-webkit-scrollbar:horizontal,
-#gptResult::-webkit-scrollbar:horizontal {
-  height: 5px;
+#parentPanelDiv #bardResult::-webkit-scrollbar:horizontal,
+#parentPanelDiv #gptResult::-webkit-scrollbar:horizontal {
+    height: 5px;
 }
 
 
-#bardResult::-webkit-scrollbar-track,
-#gptResult::-webkit-scrollbar-track {
-  background: none;
+#parentPanelDiv #bardResult::-webkit-scrollbar-track,
+#parentPanelDiv #gptResult::-webkit-scrollbar-track {
+    background: none;
 }
 
-#bardResult::-webkit-scrollbar-thumb,
-#gptResult::-webkit-scrollbar-thumb {
-  background: #d9d9d9;
-  border-radius: 8px;
+#parentPanelDiv #bardResult::-webkit-scrollbar-thumb,
+#parentPanelDiv #gptResult::-webkit-scrollbar-thumb {
+    background: #d9d9d9;
+    border-radius: 8px;
 }
 
-#bardResult::-webkit-scrollbar-thumb:hover,
-#gptResult::-webkit-scrollbar-thumb:hover {
-  background: #d9d9d9;
-  border-radius: 8px;
+#parentPanelDiv #bardResult::-webkit-scrollbar-thumb:hover,
+#parentPanelDiv #gptResult::-webkit-scrollbar-thumb:hover {
+    background: #d9d9d9;
+    border-radius: 8px;
 }
 
 
 
 /* github css  */
 
-#panel .hljs {
+#parentPanelDiv #panel .hljs {
     color: #24292e;
     background: #ffffff;
 }
 
-#panel .hljs-doctag,
-#panel .hljs-keyword,
-#panel .hljs-meta .hljs-keyword,
-#panel .hljs-template-tag,
-#panel .hljs-template-variable,
-#panel .hljs-type,
-#panel .hljs-variable.language_ {
+#parentPanelDiv #panel .hljs-doctag,
+#parentPanelDiv #panel .hljs-keyword,
+#parentPanelDiv #panel .hljs-meta .hljs-keyword,
+#parentPanelDiv #panel .hljs-template-tag,
+#parentPanelDiv #panel .hljs-template-variable,
+#parentPanelDiv #panel .hljs-type,
+#parentPanelDiv #panel .hljs-variable.language_ {
     color: #d73a49;
 }
 
-#panel .hljs-title,
-#panel .hljs-title.class_,
-#panel .hljs-title.class_.inherited__,
-#panel .hljs-title.function_ {
+#parentPanelDiv #panel .hljs-title,
+#parentPanelDiv #panel .hljs-title.class_,
+#parentPanelDiv #panel .hljs-title.class_.inherited__,
+#parentPanelDiv #panel .hljs-title.function_ {
     color: #6f42c1;
 }
 
-#panel .hljs-attr,
-#panel .hljs-attribute,
-#panel .hljs-literal,
-#panel .hljs-meta,
-#panel .hljs-number,
-#panel .hljs-operator,
-#panel .hljs-variable,
-#panel .hljs-selector-attr,
-#panel .hljs-selector-class,
-#panel .hljs-selector-id {
+#parentPanelDiv #panel .hljs-attr,
+#parentPanelDiv #panel .hljs-attribute,
+#parentPanelDiv #panel .hljs-literal,
+#parentPanelDiv #panel .hljs-meta,
+#parentPanelDiv #panel .hljs-number,
+#parentPanelDiv #panel .hljs-operator,
+#parentPanelDiv #panel .hljs-variable,
+#parentPanelDiv #panel .hljs-selector-attr,
+#parentPanelDiv #panel .hljs-selector-class,
+#parentPanelDiv #panel .hljs-selector-id {
     color: #005cc5;
 }
 
-#panel .hljs-regexp,
-#panel .hljs-string,
-#panel .hljs-meta .hljs-string {
+#parentPanelDiv #parentPanelDiv #panel .hljs-regexp,#parentPanelDiv #parentPanelDiv 
+#parentPanelDiv #parentPanelDiv #panel .hljs-string,
+#parentPanelDiv #parentPanelDiv #panel .hljs-meta .hljs-string {
     color: #032f62;
 }
 
-#panel .hljs-built_in,
-#panel .hljs-symbol {
+#parentPanelDiv #parentPanelDiv #panel .hljs-built_in,
+#parentPanelDiv #parentPanelDiv #panel .hljs-symbol {
     color: #e36209;
 }
 
-#panel .hljs-comment,
-#panel .hljs-code,
-#panel .hljs-formula {
+#parentPanelDiv #parentPanelDiv #panel .hljs-comment,
+#parentPanelDiv #parentPanelDiv #panel .hljs-code,
+#parentPanelDiv #parentPanelDiv #panel .hljs-formula {
     color: #6a737d;
 }
 
-#panel .hljs-name,
-#panel .hljs-quote,
-#panel .hljs-selector-tag,
-#panel .hljs-selector-pseudo {
+#parentPanelDiv #panel .hljs-name,
+#parentPanelDiv #panel .hljs-quote,
+#parentPanelDiv #panel .hljs-selector-tag,
+#parentPanelDiv #panel .hljs-selector-pseudo {
     color: #22863a;
 }
 
-#panel .hljs-subst {
+#parentPanelDiv #panel .hljs-subst {
     color: #24292e;
 }
 
-#panel .hljs-section {
+#parentPanelDiv #panel .hljs-section {
     color: #005cc5;
     font-weight: bold;
 }
 
-#panel .hljs-bullet {
+#parentPanelDiv #panel .hljs-bullet {
     color: #735c0f;
 }
 
-#panel .hljs-emphasis {
+#parentPanelDiv #panel .hljs-emphasis {
     color: #24292e;
     font-style: italic;
 }
 
-#panel .hljs-strong {
+#parentPanelDiv #panel .hljs-strong {
     color: #24292e;
     font-weight: bold;
 }
 
-#panel .hljs-addition {
+#parentPanelDiv #panel .hljs-addition {
     color: #22863a;
     background-color: #f0fff4;
 }
 
-#panel .hljs-deletion {
+#parentPanelDiv #panel .hljs-deletion {
     color: #b31d28;
     background-color: #ffeef0;
 }
 
-#panel .hljs-char.escape_,
-#panel .hljs-link,
-#panel .hljs-params,
-#panel .hljs-property,
-#panel .hljs-punctuation,
-#panel .hljs-tag {}
+#parentPanelDiv #panel .hljs-char.escape_,
+#parentPanelDiv #panel .hljs-link,
+#parentPanelDiv #panel .hljs-params,
+#parentPanelDiv #panel .hljs-property,
+#parentPanelDiv #panel .hljs-punctuation,
+#parentPanelDiv #panel .hljs-tag {}
