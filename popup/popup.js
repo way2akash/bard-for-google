@@ -24,8 +24,7 @@ let codeTags = document.querySelectorAll("#panel code");
 let copyDivs = document.querySelectorAll("#copyDiv")
 let copyBtns = document.querySelectorAll("#copyBtn")
 let copyPanel = document.querySelectorAll("#copyPanel")
-// let bardResponseDiv = document.getElementsByClassName("bardResponseDiv")
-// let gptResponseDiv = document.getElementsByClassName("gptResponseDiv")
+
 let titleRating = document.getElementById("titleRating")
 
 let ratingStorage = chrome.storage.local.get(["rated"])
@@ -74,11 +73,8 @@ window.onload = function () {
     chrome.storage.local.get(["mode"], (result) => {
         if (result.mode === "on") {
 
-            // modeLogo.src = "../static/images/daymode.png"
             darkmode()
-
         } else {
-            // modeLogo.src = "../static/images/darkmode.png"
             lightmode()
 
         }
@@ -122,7 +118,8 @@ mode.addEventListener("click", () => {
 const darkmode = () => {
     popupContainer.style.background = "#0d1117"
     modeLogo.src = "../static/images/darkmoon.svg"
-    titleLogo.src = "../static/images/bardGptLogowhite.png"
+    mode.setAttribute("title", "Disable dark mode")
+    titleLogo.src = "../static/images/bardGptLogowhite.svg"
     bard_section_div.style.color = "#ffffff"
     gpt_section_div.style.color = "#ffffff"
     copyLogo.src = "../static/images/copyIconDark.svg"
@@ -143,12 +140,8 @@ const darkmode = () => {
 
 
         for (let i = 0; i < bardResponseDiv.length; i++) {
-            if(!hideChatMode){
                 bardResponseDiv[i].style.background = "#161B22";
-            }else{
-                bardResponseDiv[i].style.background = "none";
 
-            }
         }
         bardResCopy.forEach((e)=>{
             e.src= "../static/images/copyIcon.svg"
@@ -160,13 +153,8 @@ const darkmode = () => {
         let gptResCopy= document.querySelectorAll("#gptResCopy")
 
         for (let i = 0; i < gptResponseDiv.length; i++) {
-            if(!hideChatMode){
                 gptResponseDiv[i].style.background = "#161B22";
 
-            }else{
-                gptResponseDiv[i].style.background = "none";
-
-            }
         }
         gptResCopy.forEach((e)=>{
             e.src= "../static/images/copyIcon.svg"
@@ -220,7 +208,9 @@ const darkmode = () => {
 const lightmode = () => {
     popupContainer.style.background = "#fff"
     modeLogo.src = "../static/images/lightmoon.svg"
-    titleLogo.src = "../static/images/bardGptLogo.png"
+    mode.setAttribute("title", "Enable dark mode")
+
+    titleLogo.src = "../static/images/bardGptLogo.svg"
     bard_section_div.style.color = "#4d5156"
     gpt_section_div.style.color = "#4d5156"
     copyLogo.src = "../static/images/copyIconDark.svg"
@@ -241,12 +231,8 @@ const lightmode = () => {
 
 
         for (let i = 0; i < bardResponseDiv.length; i++) {
-            if(!hideChatMode){
                 bardResponseDiv[i].style.background = "#F4F5FA";
-            }else{
-                bardResponseDiv[i].style.background = "none";
 
-            }
         }
         bardResCopy.forEach((e)=>{
             e.src= "../static/images/copyIconDark.svg"
@@ -259,13 +245,9 @@ const lightmode = () => {
         let gptResCopy= document.querySelectorAll("#gptResCopy")
 
         for (let i = 0; i < gptResponseDiv.length; i++) {
-            if(!hideChatMode){
                 gptResponseDiv[i].style.background = "#F4F5FA";
 
-            }else{
-                gptResponseDiv[i].style.background = "none";
 
-            }
         }
         gptResCopy.forEach((e)=>{
             e.src= "../static/images/copyIconDark.svg"
@@ -683,6 +665,7 @@ let bardResponseMsg = (quer) => {
 
     let copyBardRes = document.createElement("div")
     copyBardRes.setAttribute("id", "copyBardRes")
+    copyBardRes.setAttribute("title", "Copy response")
     bardResult.appendChild(copyBardRes)
     let bardResCopy = document.createElement("img")
     bardResCopy.setAttribute("id", "bardResCopy")
@@ -727,6 +710,8 @@ let gptResponseMsg = (quer) => {
 
         let copyGptRes = document.createElement("div")
         copyGptRes.setAttribute("id", "copyGptRes")
+        copyGptRes.setAttribute("title", "Copy response")
+
         gptResult.appendChild(copyGptRes)
         // copyGptRes.style.display = "none"
         let gptResCopy = document.createElement("img")

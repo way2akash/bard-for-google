@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
-  "version": "1.1.5",
-  "name": "__MSG_appTitle__",
+  "version": "1.2.6",
+  "name": "Bard For Google™",
   "description": "__MSG_appDesc__",
   "default_locale": "en",
   "background": {
@@ -51,10 +51,15 @@
         "static/images/closeIcon.png", 
         "static/images/daymode.png",
         "static/images/darkmode.png",
-        "static/images/bardGptLogowhite.png",
+        "static/images/bardGptLogowhite.svg",
         "static/images/star.png",
         "static/images/lightmoon.svg",
         "static/images/darkmoon.svg",
+        "static/images/bardSideIcon.svg",
+        "static/images/sideExpandIcon.svg",
+        "static/images/sidebarIconDark.svg",
+        "static/images/sidebarIconLight.svg",
+
 
         "static/font/Roboto-Regular.ttf",
         "static/font/Inter-Regular.ttf"

@@ -125,9 +125,9 @@ const getAllConversations = async (at) => {
 }
 
 const createConversation = async (at, query, tabId) => {
-    if (abortController) {
-        abortController.abort();
-    }
+    // if (abortController) {
+    //     abortController.abort();
+    // }
 
     abortController = new AbortController();
     abortSignal = abortController.signal;
@@ -413,7 +413,4 @@ const bard = async (query, tabId, bard_conv_id) => {
 }
 
 
-chrome.runtime.onInstalled.addListener(function (details) {
 
-
-})

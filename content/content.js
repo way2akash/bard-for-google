@@ -13,11 +13,12 @@ let bard_conv_id = {
 let hideChatMode = true
 let gptResponseCopy = false
 let bardMultipleMsg = false
+let sidePanelArr = []
 
 
 // images 
 let bardGptLogo = chrome.runtime.getURL("static/images/bardGptLogo.svg")
-let bardGptLogoWhite = chrome.runtime.getURL("static/images/bardGptLogowhite.png")
+let bardGptLogoWhite = chrome.runtime.getURL("static/images/bardGptLogowhite.svg")
 let lightmoon = chrome.runtime.getURL("static/images/lightmoon.svg")
 let darkmoon = chrome.runtime.getURL("static/images/darkmoon.svg")
 let copyIcon = chrome.runtime.getURL("static/images/copyIcon.svg")
@@ -28,6 +29,15 @@ let chatIcon = chrome.runtime.getURL("static/images/chatIcon.svg")
 let ratingStar = chrome.runtime.getURL("static/images/ratingStar.svg")
 let enterIcon = chrome.runtime.getURL("static/images/enterIcon.svg")
 let infoIcon = chrome.runtime.getURL("static/images/info.png")
+let logoIcon = chrome.runtime.getURL("static/images/icon64.png")
+let closeIcon = chrome.runtime.getURL("static/images/closeIcon.png")
+
+let bardSideIcon = chrome.runtime.getURL("static/images/bardSideIcon.svg")
+let sideExpandIcon = chrome.runtime.getURL("static/images/sideExpandIcon.svg")
+
+let sidebarIconDark = chrome.runtime.getURL("static/images/sidebarIconDark.svg")
+let sidebarIconLight = chrome.runtime.getURL("static/images/sidebarIconLight.svg")
+
 
 
 // getting bard token and storing
@@ -80,6 +90,8 @@ async function waitUntilVideoElementLoads() {
             if (!element) finalState = false;
 
             if (finalState) {
+                sideIconCreationFn()
+
                 if (targetLocation.includes("www.google.")) {
                     googleIntegration(element)
                 } else if (targetLocation.includes("www.bing.")) {
@@ -107,10 +119,55 @@ async function waitUntilVideoElementLoads() {
                     }
                 })
 
+
+
                 clearInterval(interval);
             }
         }, 1000);
     });
+}
+
+const sideIconCreationFn = () => {
+    let bodyTag = document.querySelector("body")
+    let sideIcon = document.createElement("div")
+    sideIcon.setAttribute("id", "sideIcon")
+    sideIcon.setAttribute("title", "Maximize panel")
+    bodyTag.appendChild(sideIcon)
+
+    let imgTag = `<img src=${bardSideIcon} id="imgTag" alt="bard for google sideIcon" /> `
+    sideIcon.innerHTML = imgTag
+
+    sideIcon.addEventListener('mouseover', function () {
+        let img = document.getElementById("imgTag")
+        img.src = sideExpandIcon
+    });
+
+    sideIcon.addEventListener('mouseout', function () {
+        let img = document.getElementById("imgTag")
+
+        img.src = bardSideIcon
+
+    });
+    sideIcon.addEventListener('click', function () {
+        let parentPanelDiv = document.getElementById("parentPanelDiv")
+        let sideIcon = document.getElementById("sideIcon")
+        parentPanelDiv.style.display = "block"
+        sideIcon.style.display = "none"
+        
+        if( document.querySelector(".kix-appview-editor-container")){
+            let classfetch = document.querySelector(".kix-appview-editor-container")
+            classfetch.style.display = "flex"
+            let canvafetch = document.querySelector(".kix-appview-editor")
+            canvafetch.style.width = "70%"
+            chrome.storage.local.set({ docVisibility: true })
+
+        }
+      
+
+
+    })
+
+
 }
 
 
@@ -239,15 +296,38 @@ const yandexIntegration = (element) => {
 const docsintegration = (element) => {
     gptquery = "Hi"
     bardquery = "Hi"
+
+
     let classfetch = document.querySelector(".kix-appview-editor-container")
-    classfetch.style.display = "flex"
     let canvafetch = document.querySelector(".kix-appview-editor")
-    canvafetch.style.width = "70%"
     let parentPanelDiv = document.createElement("div")
+    let sideIcon = document.getElementById("sideIcon")
+
     parentPanelDiv.setAttribute("id", "parentPanelDiv")
     parentPanelDiv.style.margin = "10px"
 
+
+
     element.append(parentPanelDiv)
+
+    chrome.storage.local.get(["docVisibility"], (result) => {
+        if(result.docVisibility){
+            classfetch.style.display = "flex"
+            canvafetch.style.width = "70%"
+            parentPanelDiv.style.display = "block"
+            sideIcon.style.display = "none"
+
+        }else if(!result.docVisibility){
+            classfetch.style.display = "block"
+            canvafetch.style.width = "100%"  
+            parentPanelDiv.style.display = "none"
+            sideIcon.style.display = "flex"
+          
+
+        }
+
+    })
+    
     titleSecCreationFn(parentPanelDiv)
 
 }
@@ -312,6 +392,7 @@ const titleSecCreationFn = (parentPanelDiv) => {
     modeLogo.setAttribute("id", "modeLogo")
     modeLogo.setAttribute("alt", "bard for google dark mode")
     modeLogo.src = lightmoon
+    
     mode.appendChild(modeLogo)
 
     // eventlistener on dark/light mode div
@@ -331,6 +412,7 @@ const titleSecCreationFn = (parentPanelDiv) => {
     //copy button
     let copy = document.createElement("div")
     copy.setAttribute("id", "copy")
+    copy.setAttribute("title", "Copy response")
     titleOptionDiv.appendChild(copy)
 
     let copyLogo = document.createElement("img")
@@ -351,6 +433,37 @@ const titleSecCreationFn = (parentPanelDiv) => {
         }
     })
 
+    // minimizing button
+    let minimize = document.createElement("div")
+    minimize.setAttribute("id", "minimize")
+    minimize.setAttribute("title", "Minimize panel")
+
+    titleOptionDiv.appendChild(minimize)
+
+    let minimizeLogo = document.createElement("img")
+    minimizeLogo.setAttribute("id", "minimizeLogo")
+    minimizeLogo.setAttribute("alt", "bard for google  minimizeLogo icon")
+    minimizeLogo.src = sidebarIconLight
+    minimize.appendChild(minimizeLogo)
+
+    minimize.addEventListener("click", () => {
+        let sideIcon = document.getElementById("sideIcon")
+        let parentPanelDiv = document.getElementById("parentPanelDiv")
+        parentPanelDiv.style.display = "none"
+        sideIcon.style.display = "flex"
+
+        if(document.querySelector(".kix-appview-editor-container")){
+            let classfetch = document.querySelector(".kix-appview-editor-container")
+            classfetch.style.display = "block"
+            let canvafetch = document.querySelector(".kix-appview-editor")
+            canvafetch.style.width = "100%"
+            chrome.storage.local.set({ docVisibility: false })
+
+        }
+
+    })
+
+
 
     //panel creation
     const panel = document.createElement("div");
@@ -364,6 +477,8 @@ const titleSecCreationFn = (parentPanelDiv) => {
     footer_section(panel)
 
 }
+
+
 
 
 const loaderCreation = (val) => {
@@ -634,10 +749,7 @@ const bard_section_login = (bard_section_div) => {
         info.src = infoSrc
         bard_login_box.appendChild(info)
 
-        let warnInfoText = document.createElement("p")
-        warnInfoText.setAttribute("id", "warnInfoText")
-        bard_login_box.appendChild(warnInfoText)
-        warnInfoText.innerText = chrome.i18n.getMessage("appCloudsecurity")
+
 
         let loginTextDiv1 = document.createElement("div")
         loginTextDiv1.setAttribute("id", "loginTextDiv1")
@@ -1028,7 +1140,7 @@ let gptCopySection = (gptResponseDiv) => {
             if (!hideChatMode) {
                 gptResponseDiv.style.padding = "10px"
             }
-  
+
             darkmode()
 
         } else {
@@ -1063,6 +1175,7 @@ let bardResponseMsg = (quer) => {
 
     let copyBardRes = document.createElement("div")
     copyBardRes.setAttribute("id", "copyBardRes")
+    copyBardRes.setAttribute("title", "Copy response")
     bardResult.appendChild(copyBardRes)
     let bardResCopy = document.createElement("img")
     bardResCopy.setAttribute("id", "bardResCopy")
@@ -1109,6 +1222,7 @@ let gptResponseMsg = (quer) => {
     if (gptResponseCopy && quer != "") {
         let copyGptRes = document.createElement("div")
         copyGptRes.setAttribute("id", "copyGptRes")
+        copyGptRes.setAttribute("title", "Copy response")
         gptResult.appendChild(copyGptRes)
         let gptResCopy = document.createElement("img")
         gptResCopy.setAttribute("id", "gptResCopy")
@@ -1220,7 +1334,25 @@ chrome.runtime.onMessage.addListener(function (response, sender, sendResponse) {
             } else {
                 try {
                     const markdown = window.markdownit()
-                    const html = markdown.render(final_bard_answer[4][0][1][0])
+                    let responseImg = final_bard_answer[4][0][4]
+
+
+                    const html = markdown.render(final_bard_answer[4][0][1][0]).replace(/\[Image of (.*?)\]/g, (e) => {
+                        let imgUrl
+                        let hrefUrl
+                        responseImg.forEach((arr) => {
+                            if (arr[7][0].includes(e)) {
+                                imgUrl = arr[0][0][0];
+                                hrefUrl = arr[1][0][0]
+
+                            }
+
+                        })
+
+                        return `<br> <a href ="${hrefUrl}" target="_blank"><img alt="${e}" src=${imgUrl} /> </a> <br>`;
+
+                    })
+
 
                     bard_conv_id.Cval = final_bard_answer[1][0] || ""
                     bard_conv_id.Rval = final_bard_answer[1][1] || ""
@@ -1289,7 +1421,7 @@ const darkmode = () => {
     let headerSection = document.getElementById("headerSection")
     let bardResponseDiv = document.getElementsByClassName("bardResponseDiv")
     let gptResponseDiv = document.getElementsByClassName("gptResponseDiv")
-    // let gptResCopy = document.getElementById("gptResCopy")
+    let minimizeLogo = document.getElementById("minimizeLogo")
 
 
     let bardTab = document.getElementById("bardTab")
@@ -1302,6 +1434,7 @@ const darkmode = () => {
 
 
     modeLogo.src = darkmoon
+    modeLogo.setAttribute("title", "Disable dark mode")
     parentPanelDiv.style.background = "#0d1117"
     titleLogo.src = bardGptLogoWhite
     copyLogo.src = copyIconDark
@@ -1311,6 +1444,7 @@ const darkmode = () => {
     inputBox.style.border = "1px solid #242424"
     // gptTab.style.color = "#fff"
     headerSection.style.background = "#2A2A2A"
+    minimizeLogo.src=sidebarIconDark
 
     if (document.getElementsByClassName("bardResponseDiv")) {
         let bardResponseDiv = document.getElementsByClassName("bardResponseDiv")
@@ -1327,9 +1461,7 @@ const darkmode = () => {
                     e.src = copyIcon
                 })
             }
-            // bardResCopy.forEach((e) => {
-            //     e.src = copyIcon
-            // })
+
         }
 
 
@@ -1341,7 +1473,7 @@ const darkmode = () => {
         let gptResCopy = document.querySelectorAll("#gptResCopy")
         if (hideChatMode && gptResponseDiv.length == 1) {
             gptResponseDiv[0].style.background = "none"
-            gptResCopy[0].src=copyIcon
+            gptResCopy[0].src = copyIcon
 
 
         } else {
@@ -1352,9 +1484,7 @@ const darkmode = () => {
                     e.src = copyIcon
                 })
             }
-            // gptResCopy.forEach((e) => {
-            //     e.src = copyIcon
-            // })
+
         }
 
 
@@ -1424,6 +1554,7 @@ const lightmode = () => {
     let headerSection = document.getElementById("headerSection")
     let bardResponseDiv = document.getElementsByClassName("bardResponseDiv")
     let gptResponseDiv = document.getElementsByClassName("gptResponseDiv")
+    let minimizeLogo = document.getElementById("minimizeLogo")
 
     let bardTab = document.getElementById("bardTab")
     let gptTab = document.getElementById("gptTab")
@@ -1435,6 +1566,8 @@ const lightmode = () => {
     // let gptResCopy = document.getElementById("gptResCopy")
 
     modeLogo.src = lightmoon
+    modeLogo.setAttribute("title", "Enable dark mode")
+
     parentPanelDiv.style.background = "#ffffff"
     titleLogo.src = bardGptLogo
     copyLogo.src = copyIcon
@@ -1442,9 +1575,9 @@ const lightmode = () => {
     gpt_section_div.style.color = "#4d5156"
     inputBox.style.background = "#FFFFFF"
     inputBox.style.border = "1px solid #E8E8E8"
-    // bardTab.style.color = "#000"
-    // gptTab.style.color = "#000"
+
     headerSection.style.background = "#EFEFEF"
+    minimizeLogo.src=sidebarIconLight
 
     if (loginTextDiv1) {
         loginTextDiv1.style.color = "#000"
@@ -1486,7 +1619,7 @@ const lightmode = () => {
         if (hideChatMode && gptResponseDiv.length == 1) {
 
             gptResponseDiv[0].style.background = "none"
-            gptResCopy[0].src=copyIconDark
+            gptResCopy[0].src = copyIconDark
 
 
         } else {

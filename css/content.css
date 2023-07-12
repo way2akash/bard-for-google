@@ -1,599 +1,592 @@
 @font-face {
-    font-family: "Roboto";
-    src: url("chrome-extension://__MSG_@@extension_id__/static/font/Roboto-Regular.ttf");
+  font-family: "Roboto";
+  src: url("chrome-extension://__MSG_@@extension_id__/static/font/Roboto-Regular.ttf");
 }
 
 @font-face {
-    font-family: "Inter";
-    src: url("chrome-extension://__MSG_@@extension_id__/static/font/Inter-Regular.ttf");
-
+  font-family: "Inter";
+  src: url("chrome-extension://__MSG_@@extension_id__/static/font/Inter-Regular.ttf");
 }
 
 /* Inter-Regular.ttf */
 
 #parentPanelDiv {
-    min-height: 208px;
-    width: 372px;
-    height: fit-content;
-    /* max-height: 565px; */
-    z-index: 9;
-    background: #FFFFFF;
-    border: 1px solid #D1D1D1;
-    border-radius: 20px;
-    padding: 20px 20px 0px 20px;
-    box-sizing: border-box;
-    margin-bottom: 5px;
-    /* background-color: red; */
-
+  min-height: 208px;
+  width: 372px;
+  height: fit-content;
+  /* max-height: 565px; */
+  z-index: 9;
+  background: #ffffff;
+  border: 1px solid #d1d1d1;
+  border-radius: 20px;
+  padding: 20px 20px 0px 20px;
+  box-sizing: border-box;
+  margin-bottom: 5px;
+  /* background-color: red; */
 }
-
 
 #parentPanelDiv #titleSectionx {
-    width: 100%;
-    height: 30px;
-    display: flex;
-    justify-content: space-between;
-    /* background-color:green; */
+  width: 100%;
+  height: 30px;
+  display: flex;
+  justify-content: space-between;
+  /* background-color:green; */
 }
 
-
 #parentPanelDiv #titleOptionDiv {
-    height: 100%;
+  height: 100%;
 
-    display: flex;
-    gap: 12px;
-    flex-direction: row;
+  display: flex;
+  gap: 12px;
+  flex-direction: row;
 }
 
 #parentPanelDiv #mode,
-#parentPanelDiv #copy {
-    height: 30px;
-    width: 30px;
-    background-color: #7789D2;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border-radius: 6px;
-    cursor: pointer;
+#parentPanelDiv #copy,
+#parentPanelDiv #minimize {
+  height: 30px;
+  width: 30px;
+  background-color: #7789d2;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 6px;
+  cursor: pointer;
 }
 
 #parentPanelDiv #mode img,
-#parentPanelDiv #copy img {
-    height: 14px;
-    width: 14px;
+#parentPanelDiv #copy img
+#parentPanelDiv #minimize img{
+  height: 14px;
+  width: 14px;
 }
-
 
 #parentPanelDiv #panel {
-    width: 100%;
-    color: #000;
-    /* background-color: red; */
-    /* height: 20px; */
-    font-family: "Inter", sans-serif;
+  width: 100%;
+  color: #000;
+  /* background-color: red; */
+  /* height: 20px; */
+  font-family: "Inter", sans-serif;
 }
 
-
 #parentPanelDiv .loader {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    /* height: 100vh; */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* height: 100vh; */
 }
 
 #parentPanelDiv .dot {
-    display: inline-block;
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: #4E5156;
-    margin-right: 5px;
-    animation: dot-animation 1s infinite;
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #4e5156;
+  margin-right: 5px;
+  animation: dot-animation 1s infinite;
 }
 
 #parentPanelDiv .dot:nth-child(2) {
-    animation-delay: 0.2s;
+  animation-delay: 0.2s;
 }
 
 #parentPanelDiv .dot:nth-child(3) {
-    animation-delay: 0.4s;
+  animation-delay: 0.4s;
 }
 
 @keyframes dot-animation {
+  0%,
+  80%,
+  100% {
+    opacity: 0;
+  }
 
-    0%,
-    80%,
-    100% {
-        opacity: 0;
-    }
-
-    40% {
-        opacity: 1;
-    }
+  40% {
+    opacity: 1;
+  }
 }
 
 #parentPanelDiv #headerSection {
-    width: 100%;
-    height: 50px;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-around;
-    align-items: center;
-    background: #EFEFEF;
-    border-radius: 6px;
-    margin: 20px 0px;
-    font-family: "Roboto", sans-serif;
-
-
+  width: 100%;
+  height: 50px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+  background: #efefef;
+  border-radius: 6px;
+  margin: 20px 0px;
+  font-family: "Roboto", sans-serif;
 }
 
 #parentPanelDiv #bardTab,
 #parentPanelDiv #gptTab {
-    width: 151px;
-    height: 36px;
-    cursor: pointer;
-    box-sizing: border-box;
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    gap: 4px;
-    font-size: 14px;
-    color: #000000;
-    font-weight: 400;
-    font-family: "Roboto", sans-serif;
-    border-radius: 6px;
-    transition: 0.1s ease-in-out;
-    user-select: none;
+  width: 151px;
+  height: 36px;
+  cursor: pointer;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 4px;
+  font-size: 14px;
+  color: #000000;
+  font-weight: 400;
+  font-family: "Roboto", sans-serif;
+  border-radius: 6px;
+  transition: 0.1s ease-in-out;
+  user-select: none;
 }
 
 #parentPanelDiv #bardTab {
-    background: #FFFFFF;
-    box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.14);
-    border-left: 3.5px solid;
-    border-image: linear-gradient(180deg, #FCE264 0%, #C358F4 100%);
-    border-image-slice: 1;
-    border-radius: 2px;
+  background: #ffffff;
+  box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.14);
+  border-left: 3.5px solid;
+  border-image: linear-gradient(180deg, #fce264 0%, #c358f4 100%);
+  border-image-slice: 1;
+  border-radius: 2px;
 
-    /* border-left: 3.5px solid #b5adad; */
-
-
-
+  /* border-left: 3.5px solid #b5adad; */
 }
 
 #parentPanelDiv #gptTab {
-    background: transparent;
-    opacity: 0.4;
-    /* border-left: 3.5px solid; */
-    border-image: linear-gradient(180deg, #FCE264 0%, #C358F4 100%);
-    border-image-slice: 1;
-    border-radius: 2px;
+  background: transparent;
+  opacity: 0.4;
+  /* border-left: 3.5px solid; */
+  border-image: linear-gradient(180deg, #fce264 0%, #c358f4 100%);
+  border-image-slice: 1;
+  border-radius: 2px;
 }
 
-
-
 #parentPanelDiv #bard_section_div {
-    box-sizing: border-box;
-    width: 100%;
-    align-items: flex-start;
-    /* min-height: 150px; */
-    /* max-height: 350px; */
-    /* background: white; */
-    /* background-color: red; */
-    overflow: auto;
-    /* padding: 10px 10px 10px 20px; */
-    display: flex;
-    justify-content: center;
-    /* align-items: center; */
-    color: #4d5156;
-    font-size: 14px;
-    flex-direction: column;
+  box-sizing: border-box;
+  width: 100%;
+  align-items: flex-start;
+  /* min-height: 150px; */
+  /* max-height: 350px; */
+  /* background: white; */
+  /* background-color: red; */
+  overflow: auto;
+  /* padding: 10px 10px 10px 20px; */
+  display: flex;
+  justify-content: center;
+  /* align-items: center; */
+  color: #4d5156;
+  font-size: 14px;
+  flex-direction: column;
 }
 
 #parentPanelDiv #bardResult,
 #parentPanelDiv #gptResult {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    max-height: 350px;
-    overflow-y: auto;
-    font-size: 12px;
-    /* background-color: #fff; */
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-height: 350px;
+  overflow-y: auto;
+  font-size: 14px;
+  /* background-color: #fff; */
 }
 
 #parentPanelDiv .bardClientDiv,
 #parentPanelDiv .gptClientDiv {
-    background: #4662D2;
-    color: #FFFFFF;
-    padding: 5px;
-    width: fit-content;
-    align-self: flex-end;
-    border-radius: 6px 6px 0px 6px;
-    margin-bottom: 10px;
-    width: fit-content;
-    max-width: 97%;
-    padding: 10px;
-    display: none;
-    box-sizing: border-box;
-    line-height: 20px;
+  background: #4662d2;
+  color: #ffffff;
+  padding: 5px;
+  width: fit-content;
+  align-self: flex-end;
+  border-radius: 6px 6px 0px 6px;
+  margin-bottom: 10px;
+  width: fit-content;
+  max-width: 97%;
+  padding: 10px;
+  display: none;
+  box-sizing: border-box;
+  line-height: 20px;
 }
 
 #parentPanelDiv .gptResponseDiv,
 #parentPanelDiv .bardResponseDiv {
-    /* background: #F6F8FA; */
-    /* padding: 5px; */
-    width: fit-content;
-    align-self: flex-start;
-    border-radius: 6px 6px 6px 0px;
-    margin-bottom: 10px;
-    width: fit-content;
-    max-width: 97%;
-    /* padding: 20px; */
-    background: none;
-    box-sizing: border-box;
-    position: relative;
-    /* overflow-y: auto; */
-    /* padding-bottom: 30px; */
-    /* margin-bottom: 30px; */
-    line-height: 20px;
-    /* background: #fff; */
-
+  /* background: #F6F8FA; */
+  /* padding: 5px; */
+  width: fit-content;
+  align-self: flex-start;
+  border-radius: 6px 6px 6px 0px;
+  margin-bottom: 10px;
+  width: fit-content;
+  max-width: 97%;
+  /* padding: 20px; */
+  background: none;
+  box-sizing: border-box;
+  position: relative;
+  /* overflow-y: auto; */
+  /* padding-bottom: 30px; */
+  /* margin-bottom: 30px; */
+  line-height: 20px;
+  /* background: #fff; */
 }
 
-#parentPanelDiv .bardResponseDiv>*~*,
-#parentPanelDiv .gptResponseDiv>*~* {
-    margin-bottom: 5px;
+#parentPanelDiv .bardResponseDiv > * ~ *,
+#parentPanelDiv .gptResponseDiv > * ~ * {
+  margin-bottom: 5px;
 }
 
 #panel .gptResponseDiv table,
 #panel .bardResponseDiv table {
-    border-collapse: collapse;
+  border-collapse: collapse;
 }
 
 #panel .gptResponseDiv table th,
 #panel .gptResponseDiv table td,
 #panel .bardResponseDiv table th,
 #panel .bardResponseDiv table td {
-    border: 1px solid rgba(96, 96, 96, 0.695);
+  border: 1px solid rgba(96, 96, 96, 0.695);
 }
 
 #parentPanelDiv #copyBardRes,
 #parentPanelDiv #copyGptRes {
-    /* position: absolute; */
-    width: 20px;
-    height: 20px;
-    bottom: -30px;
-    /* background-color: red; */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-    margin-bottom: 10px;
+  /* position: absolute; */
+  width: 20px;
+  height: 20px;
+  bottom: -30px;
+  /* background-color: red; */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  margin-bottom: 10px;
 }
 
 #parentPanelDiv #copyBardRes img,
 #parentPanelDiv #copyGptRes img {
-    height: 15px;
-    width: 15px;
+  height: 15px;
+  width: 15px;
 }
 
 #parentPanelDiv #bardResult p,
 #parentPanelDiv #bardResult span,
 #parentPanelDiv #gptResult p,
 #parentPanelDiv #gptResult span {
-    /* color: #000; */
-    font-size: 12px;
+  /* color: #000; */
+  font-size: 14px;
 }
 
 #parentPanelDiv #gpt_section_div {
-    box-sizing: border-box;
-    width: 100%;
-    align-items: flex-start;
-    /* min-height: 150px; */
-    /* max-height: 350px; */
-    overflow: auto;
-    /* background: white; */
-    /* background: green; */
-    /* padding: 10px 10px 10px 20px; */
-    display: none;
-    /* align-items: center; */
-    justify-content: center;
-    flex-direction: column;
-    color: #4d5156;
-    font-size: 14px;
+  box-sizing: border-box;
+  width: 100%;
+  align-items: flex-start;
+  /* min-height: 150px; */
+  /* max-height: 350px; */
+  overflow: auto;
+  /* background: white; */
+  /* background: green; */
+  /* padding: 10px 10px 10px 20px; */
+  display: none;
+  /* align-items: center; */
+  justify-content: center;
+  flex-direction: column;
+  color: #4d5156;
+  font-size: 14px;
 }
 
-
 #parentPanelDiv #panel pre {
-    width: 100%;
-    overflow: unset !important;
-    position: relative;
-    padding: 0px;
+  width: 100%;
+  overflow: unset !important;
+  position: relative;
+  padding: 0px;
 }
 
 #parentPanelDiv #panel code {
-    display: block;
-    /* background: #F4F5FA; */
-    padding: 10px;
-    overflow-x: auto;
-    font-size: 14px;
-    /* color: #000; */
+  display: block;
+  /* background: #F4F5FA; */
+  padding: 10px;
+  overflow-x: auto;
+  font-size: 14px;
+  /* color: #000; */
 }
 
 #parentPanelDiv #panel #copyPanel {
-    user-select: none;
-    width: 100%;
-    height: 30px;
-    /* background-color: #59637e; */
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    /* color: white; */
-    /* background: #DADDEA; */
-    border-radius: 6px 6px 0px 0px;
+  user-select: none;
+  width: 100%;
+  height: 30px;
+  /* background-color: #59637e; */
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  /* color: white; */
+  /* background: #DADDEA; */
+  border-radius: 6px 6px 0px 0px;
 }
 
 #parentPanelDiv #panel #copyDiv {
-    width: 125px;
-    height: 26px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: row-reverse;
-    cursor: pointer;
-    font-size: 12px;
-    /* color: #6170AB; */
+  width: 125px;
+  height: 26px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: row-reverse;
+  cursor: pointer;
+  font-size: 12px;
+  /* color: #6170AB; */
 }
 
 #parentPanelDiv #panel #copyBtn {
-    cursor: pointer;
-    height: 12px;
-    padding: 5px;
-    border-radius: 5px;
-    box-sizing: content-box;
+  cursor: pointer;
+  height: 12px;
+  width: 12px;
+  padding: 5px;
+  border-radius: 5px;
+  box-sizing: content-box;
 }
 
 #parentPanelDiv #panel ul {
-    width: 100%;
-    font-family: "Inter", sans-serif;
+  width: 100%;
+  font-family: "Inter", sans-serif;
 
-    /* padding: 0px 5px; */
+  /* padding: 0px 5px; */
+}
+
+#parentPanelDiv .bardResponseDiv img,
+#parentPanelDiv .gptResponseDiv img {
+  /* cursor: pointer; */
+  width: 70%;
 }
 
 #parentPanelDiv #panel ol {
-    width: 100%;
-    /* padding: 0px 5px; */
-    font-family: "Inter", sans-serif;
-
-
+  width: 100%;
+  /* padding: 0px 5px; */
+  font-family: "Inter", sans-serif;
 }
 
 #parentPanelDiv #panel li {
-    font-family: "Inter", sans-serif;
-
+  font-family: "Inter", sans-serif;
+  margin-left: 20px;
 }
 
 #parentPanelDiv #footer_section_div {
-    height: 70px;
-    width: 372px;
-    margin: 0px 0px 0px -21px;
-    border-radius: 0px 0px 20px 20px;
-    border-top: 1px solid #E8E8E8;
-    padding: 0px 20px;
-    box-sizing: border-box;
-    margin-top: 4px;
-    display: none;
+  height: 70px;
+  width: 372px;
+  margin: 0px 0px 0px -21px;
+  border-radius: 0px 0px 20px 20px;
+  border-top: 1px solid #e8e8e8;
+  padding: 0px 20px;
+  box-sizing: border-box;
+  margin-top: 4px;
+  display: none;
 }
 
 #parentPanelDiv #rateChatDiv {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: flex-start;
-    /* display: none; */
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  /* display: none; */
 }
-
-
 
 #parentPanelDiv #chatTextDiv {
-    box-sizing: border-box;
+  box-sizing: border-box;
 
-    width: 125px;
-    height: 30px;
-    border: 1px solid #2B88F5;
-    border-radius: 26px;
-    display: flex;
-    justify-content: center;
-    gap: 5px;
-    align-items: center;
-    flex-direction: row;
-    font-style: normal;
-    font-weight: 400;
-    font-size: 12px;
-    line-height: 21px;
-    color: #2B88F5;
-    cursor: pointer;
+  width: 125px;
+  height: 30px;
+  border: 1px solid #2b88f5;
+  border-radius: 26px;
+  display: flex;
+  justify-content: center;
+  gap: 5px;
+  align-items: center;
+  flex-direction: row;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 21px;
+  color: #2b88f5;
+  cursor: pointer;
 }
 
-
 #parentPanelDiv #rateDiv {
-    height: 30px;
-    width: fit-content;
-    margin-left: 20px;
-    /* background-color: red; */
-    text-decoration: none;
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    gap: 5px;
-    color: #2B88F5;
-    cursor: pointer;
+  height: 30px;
+  width: fit-content;
+  margin-left: 20px;
+  /* background-color: red; */
+  text-decoration: none;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  color: #2b88f5;
+  cursor: pointer;
 }
 
 #parentPanelDiv #titleRating {
-    /* display: none; */
-    height: 30px;
-    width: fit-content;
-    text-decoration: none;
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    gap: 5px;
-    color: #2B88F5;
-    cursor: pointer;
-    display: none;
+  /* display: none; */
+  height: 30px;
+  width: fit-content;
+  text-decoration: none;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  color: #2b88f5;
+  cursor: pointer;
+  display: none;
 }
 
 #chatTextDiv img,
 #rateDiv img,
 #titleRating img {
-    height: 12px;
+  height: 12px;
 }
 
-
 #parentPanelDiv #followUpDiv {
-    width: 100%;
-    height: 100%;
-    /* display: flex; */
-    flex-direction: row;
-    align-items: center;
-    justify-content: flex-start;
-    position: relative;
-    display: none;
+  width: 100%;
+  height: 100%;
+  /* display: flex; */
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  position: relative;
+  display: none;
 }
 
 #parentPanelDiv #inputBox {
-    width: 100%;
-    height: 40px;
-    background: #FFFFFF;
-    border: 1px solid #E8E8E8;
-    border-radius: 6px;
-    padding: 0px 28px 0px 10px;
-    font-weight: 400;
-    font-size: 12px;
-    color: #999A9B;
-
-
+  width: 100%;
+  height: 40px;
+  background: #ffffff;
+  border: 1px solid #e8e8e8;
+  border-radius: 6px;
+  padding: 0px 28px 0px 10px;
+  font-weight: 400;
+  font-size: 12px;
+  color: #999a9b;
 }
 
 #parentPanelDiv #followUpDiv input:focus-visible {
-    outline: none;
+  outline: none;
 }
 
 #parentPanelDiv #enterImg {
-    position: absolute;
-    right: 10px;
-    cursor: pointer;
+  position: absolute;
+  right: 10px;
+  cursor: pointer;
 }
 
-
 #parentPanelDiv #gpt_login_box {
-    width: 99%;
-    min-height: 150px;
-    display: flex;
-    align-items: center;
-    flex-direction: column;
-    justify-content: center;
-
+  width: 99%;
+  min-height: 150px;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  justify-content: center;
 }
 
 #parentPanelDiv #bard_login_box {
-    position: relative;
-    width: 99%;
-    min-height: 150px;
-    display: flex;
-    align-items: center;
-    flex-direction: column;
-    justify-content: center;
-
+  position: relative;
+  width: 99%;
+  min-height: 150px;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  justify-content: center;
 }
 
 #parentPanelDiv #infoDiv {
-    width: 20px;
-    height: 20px;
-    margin-bottom: 13px;
+  width: 20px;
+  height: 20px;
+  margin-bottom: 13px;
 }
 
 #parentPanelDiv #warnInfoText {
-    font-family: "Roboto", sans-serif;
-    font-style: normal;
-    font-weight: 600;
-    font-size: 14px;
-    line-height: 17px;
-    color: #f56969 !important;
+  font-family: "Roboto", sans-serif;
+  font-style: normal;
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 17px;
+  color: #f56969 !important;
 }
 
 #parentPanelDiv #loginTextDiv1 {
-    font-size: 13px;
-    font-style: normal;
-    font-weight: 400;
-    line-height: 17px;
-    color: #3c453c;
-    margin-top: 8px;
+  font-size: 13px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 17px;
+  color: #3c453c;
+  margin-top: 8px;
 }
 
 #parentPanelDiv #chatGptLink {
-    font-style: normal;
-    font-weight: 400;
-    line-height: 17px;
-    color: #0878bd;
-    cursor: pointer;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 17px;
+  color: #0878bd;
+  cursor: pointer;
 }
 
 #parentPanelDiv #bard_warn_text {
-    position: absolute;
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    top: 372px;
-    color: #d62f2f;
-    font-size: 11px;
-    font-weight: 600;
+  position: absolute;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  top: 372px;
+  color: #d62f2f;
+  font-size: 11px;
+  font-weight: 600;
 }
-
 
 
 /* custom scroll bar */
 #parentPanelDiv #bardResult::-webkit-scrollbar,
 #parentPanelDiv #gptResult::-webkit-scrollbar {
-    width: 5px;
-    position: absolute;
-    left: 10px;
+  width: 5px;
+  position: absolute;
+  left: 10px;
 }
 
 #parentPanelDiv #bardResult::-webkit-scrollbar:horizontal,
 #parentPanelDiv #gptResult::-webkit-scrollbar:horizontal {
-    height: 5px;
+  height: 5px;
 }
-
 
 #parentPanelDiv #bardResult::-webkit-scrollbar-track,
 #parentPanelDiv #gptResult::-webkit-scrollbar-track {
-    background: none;
+  background: none;
 }
 
 #parentPanelDiv #bardResult::-webkit-scrollbar-thumb,
 #parentPanelDiv #gptResult::-webkit-scrollbar-thumb {
-    background: #d9d9d9;
-    border-radius: 8px;
+  background: #d9d9d9;
+  border-radius: 8px;
 }
 
 #parentPanelDiv #bardResult::-webkit-scrollbar-thumb:hover,
 #parentPanelDiv #gptResult::-webkit-scrollbar-thumb:hover {
-    background: #d9d9d9;
-    border-radius: 8px;
+  background: #d9d9d9;
+  border-radius: 8px;
 }
-
+/* //side icon css */
+#sideIcon{
+    /* width: 30px;
+    height: 30px; */
+    position: fixed;
+    top: 80%;
+    right: 0px;
+    cursor: pointer;
+    display: none;
+    z-index: 999;
+}
+/* #imgTag{
+    filter: drop-shadow(2px 2px 2px red);
+} */
 
 
 /* github css  */
 
 #parentPanelDiv #panel .hljs {
-    color: #24292e;
-    background: #ffffff;
+  color: #24292e;
+  background: #ffffff;
 }
 
 #parentPanelDiv #panel .hljs-doctag,
@@ -603,14 +596,14 @@
 #parentPanelDiv #panel .hljs-template-variable,
 #parentPanelDiv #panel .hljs-type,
 #parentPanelDiv #panel .hljs-variable.language_ {
-    color: #d73a49;
+  color: #d73a49;
 }
 
 #parentPanelDiv #panel .hljs-title,
 #parentPanelDiv #panel .hljs-title.class_,
 #parentPanelDiv #panel .hljs-title.class_.inherited__,
 #parentPanelDiv #panel .hljs-title.function_ {
-    color: #6f42c1;
+  color: #6f42c1;
 }
 
 #parentPanelDiv #panel .hljs-attr,
@@ -623,64 +616,69 @@
 #parentPanelDiv #panel .hljs-selector-attr,
 #parentPanelDiv #panel .hljs-selector-class,
 #parentPanelDiv #panel .hljs-selector-id {
-    color: #005cc5;
+  color: #005cc5;
 }
 
-#parentPanelDiv #parentPanelDiv #panel .hljs-regexp,#parentPanelDiv #parentPanelDiv 
-#parentPanelDiv #parentPanelDiv #panel .hljs-string,
+#parentPanelDiv #parentPanelDiv #panel .hljs-regexp,
+#parentPanelDiv
+  #parentPanelDiv
+  #parentPanelDiv
+  #parentPanelDiv
+  #panel
+  .hljs-string,
 #parentPanelDiv #parentPanelDiv #panel .hljs-meta .hljs-string {
-    color: #032f62;
+  color: #032f62;
 }
 
 #parentPanelDiv #parentPanelDiv #panel .hljs-built_in,
 #parentPanelDiv #parentPanelDiv #panel .hljs-symbol {
-    color: #e36209;
+  color: #e36209;
 }
 
 #parentPanelDiv #parentPanelDiv #panel .hljs-comment,
 #parentPanelDiv #parentPanelDiv #panel .hljs-code,
 #parentPanelDiv #parentPanelDiv #panel .hljs-formula {
-    color: #6a737d;
+  color: #6a737d;
 }
 
 #parentPanelDiv #panel .hljs-name,
 #parentPanelDiv #panel .hljs-quote,
 #parentPanelDiv #panel .hljs-selector-tag,
 #parentPanelDiv #panel .hljs-selector-pseudo {
-    color: #22863a;
+  color: #22863a;
 }
 
 #parentPanelDiv #panel .hljs-subst {
-    color: #24292e;
+  color: #24292e;
 }
 
 #parentPanelDiv #panel .hljs-section {
-    color: #005cc5;
-    font-weight: bold;
+  color: #005cc5;
+  font-weight: bold;
 }
 
 #parentPanelDiv #panel .hljs-bullet {
-    color: #735c0f;
+  color: #735c0f;
 }
 
 #parentPanelDiv #panel .hljs-emphasis {
-    color: #24292e;
-    font-style: italic;
+  color: #24292e;
+  font-style: italic;
 }
 
 #parentPanelDiv #panel .hljs-strong {
-    color: #24292e;
-    font-weight: bold;
+  color: #24292e;
+  font-weight: bold;
 }
 
 #parentPanelDiv #panel .hljs-addition {
-    color: #22863a;
-    background-color: #f0fff4;
+  color: #22863a;
+  background-color: #f0fff4;
 }
 
 #parentPanelDiv #panel .hljs-deletion {
-    color: #b31d28;
-    background-color: #ffeef0;
+  color: #b31d28;
+  background-color: #ffeef0;
 }
 
 #parentPanelDiv #panel .hljs-char.escape_,
@@ -688,4 +686,5 @@
 #parentPanelDiv #panel .hljs-params,
 #parentPanelDiv #panel .hljs-property,
 #parentPanelDiv #panel .hljs-punctuation,
-#parentPanelDiv #panel .hljs-tag {}
+#parentPanelDiv #panel .hljs-tag {
+}
